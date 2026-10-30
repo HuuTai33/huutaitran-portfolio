@@ -29,7 +29,11 @@ describe('AboutComponent', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     const nameEl = compiled.querySelector('.artist-name');
-    expect(nameEl?.textContent).toContain('HuuTai Tran');
+    expect(nameEl?.textContent).toContain('Web developer / Photographer');
+
+    const bioEl = compiled.querySelector('.about-bio');
+    expect(bioEl?.textContent).toContain('Full Stack Web Developer');
+    expect(bioEl?.textContent).toContain('street photography');
 
     const contactBtn = compiled.querySelector('.btn-direct-contact') as HTMLAnchorElement;
     expect(contactBtn).toBeTruthy();

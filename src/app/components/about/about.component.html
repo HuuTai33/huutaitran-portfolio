@@ -1,13 +1,13 @@
-<div 
-  *ngIf="photosService.isAboutOpen()" 
+<div
+  *ngIf="photosService.isAboutOpen()"
   class="about-modal-backdrop"
   (click)="close()">
-  
+
   <div class="about-modal-container" (click)="$event.stopPropagation()">
     <!-- Header with Close Button -->
     <header class="about-modal-header">
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="about-close-btn"
         (click)="close()"
         aria-label="Fermer"
@@ -20,7 +20,19 @@
     </header>
 
     <div class="about-modal-body">
-      <h2 class="artist-name">HuuTai Tran</h2>
+      <h2 class="artist-name">Web developer / Photographer</h2>
+
+      <div class="about-bio">
+        <p>
+          HuuTai TRAN is a Full Stack web developer based in France, with over 5 years of experience, primarily working with Angular.
+        </p>
+        <p>
+          Beyond code, he is passionate about photography, especially street photography. He enjoys capturing everyday life as it unfolds, focusing on spontaneous moments, fleeting gestures and, above all, movement.
+        </p>
+        <p>
+          Whether through code or photography, he is driven by the same curiosity: observing the world, exploring ideas and creating something meaningful.
+        </p>
+      </div>
 
       <div class="about-contact-cta">
         <a href="mailto:huutai.tran33@gmail.com" class="btn-direct-contact">
