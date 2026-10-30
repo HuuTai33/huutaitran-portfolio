@@ -1,0 +1,117 @@
+<div 
+  *ngIf="photosService.isAboutOpen()" 
+  class="about-modal-backdrop"
+  (click)="close()">
+  
+  <div class="about-modal-container" (click)="$event.stopPropagation()">
+    <!-- Header with Close Button -->
+    <header class="about-modal-header">
+      <div class="about-pre">
+        <span class="pre-line"></span>
+        <span class="pre-text">HuuTai Tran &bull; Démarche Artistique</span>
+      </div>
+      <button 
+        type="button" 
+        class="about-close-btn"
+        (click)="close()"
+        title="Fermer (Échap)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
+    <div class="about-modal-body">
+      <!-- Top Section: Bio & Visual -->
+      <div class="about-main-grid">
+        <div class="about-visual">
+          <div class="portrait-card">
+            <img 
+              src="/images/converted_webp/huutaitran - 0.webp" 
+              alt="HuuTai Tran - Tokyo Photography" 
+              class="portrait-img" />
+            <div class="portrait-overlay">
+              <span class="portrait-caption">Tokyo After Dark &bull; 2024</span>
+            </div>
+          </div>
+
+          <blockquote class="about-quote">
+            <p class="quote-text">
+              &ldquo;Chaque ruelle de Tokyo recèle une harmonie invisible entre le vertige futuriste et la lenteur suspendue des traditions.&rdquo;
+            </p>
+            <cite class="quote-author">— HuuTai Tran</cite>
+          </blockquote>
+        </div>
+
+        <div class="about-content">
+          <h2 class="about-heading">
+            Capturer la pulsation silencieuse des mégapoles contemporaines.
+          </h2>
+
+          <div class="about-text-blocks">
+            <p>
+              Photographe et développeur créatif, <strong>HuuTai Tran</strong> explore les contrastes nocturnes et les géométries urbaines de Tokyo à travers un regard cinématographique épuré.
+            </p>
+            <p>
+              À travers cette collection de 160 photographies réalisées au Japon, son travail s'attarde sur les lumières au néon, les reflets de pluie à Shinjuku et Shibuya, ainsi que les perspectives graphiques de Ginza et Roppongi.
+            </p>
+            <p>
+              Équipé du système <strong>Fujifilm X-T5</strong> et d'optiques fixes ultra-lumineuses (23mm & 33mm f/1.4), il privilégie une colorimétrie soignée, respectueuse des textures et des ambiances brutes.
+            </p>
+          </div>
+
+          <!-- Technical Specs -->
+          <div class="about-specs-grid">
+            <div class="spec-card">
+              <span class="spec-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </span>
+              <div class="spec-info">
+                <span class="spec-title">Boîtier & Optiques</span>
+                <span class="spec-desc">Fujifilm X-T5 &bull; 23mm / 33mm f/1.4</span>
+              </div>
+            </div>
+
+            <div class="spec-card">
+              <span class="spec-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </span>
+              <div class="spec-info">
+                <span class="spec-title">Tirages Fine Art</span>
+                <span class="spec-desc">Hahnemühle Baryta &bull; Encres pigmentaires</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services Grid -->
+      <div class="services-wrapper">
+        <h3 class="services-title">Tirages & Projets</h3>
+        <div class="services-grid">
+          <div *ngFor="let s of services" class="service-card">
+            <span class="service-num">{{ s.num }}</span>
+            <h4 class="service-name">{{ s.title }}</h4>
+            <p class="service-desc">{{ s.desc }}</p>
+          </div>
+        </div>
+
+        <div class="about-contact-cta">
+          <a href="mailto:contact@huutaitran.com" class="btn-direct-contact">
+            <span>Prendre contact / Commande de tirage</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

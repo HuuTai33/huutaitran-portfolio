@@ -1,0 +1,20 @@
+@if (!isHidden()) {
+  <div 
+    class="loader-overlay" 
+    [class.fade-out]="isFadingOut()" 
+    aria-label="Chargement du site"
+    role="status"
+    aria-live="polite">
+    <div class="loader-content">
+      <div class="loader-brackets" aria-hidden="true">
+        <span class="bracket bracket-left">&#123;</span>
+        <span class="dots-wrapper">
+          <span class="dot dot-1">.</span>
+          <span class="dot dot-2">.</span>
+          <span class="dot dot-3">.</span>
+        </span>
+        <span class="bracket bracket-right">&#125;</span>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Background: Pure White Square -->
+  <rect width="512" height="512" fill="#ffffff"/>
+  
+  <!-- 'H' Letter in Syne Font (Pure Black) -->
+  <path d="M 56.63 81.92 H 128.20 V 225.60 H 383.80 V 81.92 H 455.37 V 430.08 H 383.80 V 285.33 H 128.20 V 430.08 H 56.63 Z" fill="#000000"/>
+</svg>

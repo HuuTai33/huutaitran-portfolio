@@ -1,0 +1,89 @@
+<header
+  class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
+  [class.glass-nav]="isScrolled()"
+  [class.nav-transparent]="!isScrolled()">
+
+  <div class="header-container">
+    <!-- Brand Logo (Left) -->
+    <a href="#" (click)="scrollToTop($event)" class="brand-link" aria-label="HuuTai Tran - Accueil">
+      <span class="brand-title">HuuTai Tran</span>
+    </a>
+
+    <!-- Desktop Navigation (Right) -->
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a
+        href="#about"
+        (click)="openAbout($event)"
+        class="nav-item">
+        About
+      </a>
+      <a
+        href="https://www.instagram.com/trn.ht"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-item">
+        Instagram
+      </a>
+      <a
+        href="https://github.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nav-item">
+        Web development
+      </a>
+    </nav>
+
+    <!-- Mobile Hamburger Toggle -->
+    <button
+      type="button"
+      (click)="toggleMobileMenu()"
+      class="mobile-toggle"
+      [attr.aria-expanded]="isMobileMenuOpen()"
+      aria-label="Menu de navigation">
+      <span
+        class="toggle-bar"
+        [class.rotate-top]="isMobileMenuOpen()"></span>
+      <span
+        class="toggle-bar"
+        [class.hide-mid]="isMobileMenuOpen()"></span>
+      <span
+        class="toggle-bar"
+        [class.rotate-bot]="isMobileMenuOpen()"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Drawer Menu -->
+  <div
+    *ngIf="isMobileMenuOpen()"
+    class="mobile-drawer">
+
+    <div class="drawer-links">
+      <a
+        href="#about"
+        (click)="openAbout($event)"
+        class="drawer-item">
+        About
+      </a>
+      <a
+        href="https://www.instagram.com/trn.ht"
+        target="_blank"
+        rel="noopener noreferrer"
+        (click)="closeMobileMenu()"
+        class="drawer-item">
+        Instagram
+      </a>
+      <a
+        href="https://github.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        (click)="closeMobileMenu()"
+        class="drawer-item">
+        Web development
+      </a>
+    </div>
+
+    <div class="drawer-footer">
+      <span>HuuTai Tran &bull; Portfolio</span>
+    </div>
+  </div>
+</header>

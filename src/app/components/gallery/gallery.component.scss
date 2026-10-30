@@ -1,0 +1,200 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.gallery-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+/* Two-Column Alternating Parallax Canvas */
+.stream-columns-track {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.75rem;
+  padding: 5.5rem 1.25rem 7.5rem;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  height: 100%;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    gap: 3rem;
+    padding: 6.5rem 2.5rem 8rem;
+  }
+
+  @media (min-width: 1200px) {
+    gap: 4.5rem;
+    padding: 7.5rem 3.5rem 8.5rem;
+  }
+}
+
+.stream-column {
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 22rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+
+  @media (min-width: 768px) {
+    max-width: 26rem;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 30rem;
+  }
+
+  .column-loop-set {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    padding-bottom: 3.5rem;
+
+    @media (min-width: 768px) {
+      gap: 5.5rem;
+      padding-bottom: 5.5rem;
+    }
+
+    @media (min-width: 1200px) {
+      gap: 7rem;
+      padding-bottom: 7rem;
+    }
+  }
+
+  /* Left column offset for natural alternating stagger */
+  &.col-left {
+    margin-top: 1rem;
+    @media (min-width: 768px) {
+      margin-top: 2rem;
+    }
+  }
+
+  &.col-right {
+    margin-top: 0;
+  }
+}
+
+/* Photo Item Card */
+.photo-item {
+  position: relative;
+  width: 100%;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #08080a;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.5s ease, 
+              border-color 0.4s ease;
+
+  &:hover, &:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 255, 255, 0.05);
+  }
+}
+
+.photo-img-box {
+  position: relative;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  background: #0d0e12;
+
+  .photo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transition: opacity 0.4s ease;
+  }
+}
+
+/* Floating Bottom Footer / Minimal HUD */
+.stream-floating-hud {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 30;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    padding: 1.25rem 2.5rem;
+  }
+
+  .hud-left {
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+
+    .hud-email {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 2px;
+      transition: color 0.3s ease, opacity 0.3s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: #ffffff;
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      &:hover,
+      &:focus-visible {
+        color: #ffffff;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .hud-right {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.5);
+
+    .hud-year {
+      font-weight: 500;
+    }
+  }
+}

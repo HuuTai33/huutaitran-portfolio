@@ -1,0 +1,108 @@
+<section
+  class="gallery-viewport"
+  #streamContainer
+  aria-label="Galerie photographique en défilement infini et parallaxe"
+  (mousedown)="onPointerDown($event)"
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd()">
+
+  <!-- Alternating Parallax Infinite Stream -->
+  <div class="stream-columns-track">
+
+    <!-- Left Column (Odd photos) -->
+    <div #colLeft class="stream-column col-left">
+      <!-- Cycle Set 1 (Measured for seamless modulo wrap) -->
+      <div #colLeftSet class="column-loop-set">
+        <article
+          *ngFor="let photo of leftColumnPhotos()"
+          class="photo-item"
+          (click)="openPhoto(photo)"
+          tabindex="0"
+          (keydown.enter)="openPhoto(photo)"
+          [attr.aria-label]="photo.title">
+          <div class="photo-img-box">
+            <img
+              [src]="photo.thumbSrc || photo.src"
+              [alt]="photo.title"
+              decoding="async"
+              class="photo-img" />
+          </div>
+        </article>
+      </div>
+
+      <!-- Cycle Set 2 (Identical for seamless infinite scroll) -->
+      <div class="column-loop-set" aria-hidden="true">
+        <article
+          *ngFor="let photo of leftColumnPhotos()"
+          class="photo-item"
+          (click)="openPhoto(photo)"
+          tabindex="0"
+          (keydown.enter)="openPhoto(photo)"
+          [attr.aria-label]="photo.title">
+          <div class="photo-img-box">
+            <img
+              [src]="photo.thumbSrc || photo.src"
+              [alt]="photo.title"
+              decoding="async"
+              class="photo-img" />
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Right Column (Even photos) -->
+    <div #colRight class="stream-column col-right">
+      <!-- Cycle Set 1 (Measured for seamless modulo wrap) -->
+      <div #colRightSet class="column-loop-set">
+        <article
+          *ngFor="let photo of rightColumnPhotos()"
+          class="photo-item"
+          (click)="openPhoto(photo)"
+          tabindex="0"
+          (keydown.enter)="openPhoto(photo)"
+          [attr.aria-label]="photo.title">
+          <div class="photo-img-box">
+            <img
+              [src]="photo.thumbSrc || photo.src"
+              [alt]="photo.title"
+              decoding="async"
+              class="photo-img" />
+          </div>
+        </article>
+      </div>
+
+      <!-- Cycle Set 2 (Identical for seamless infinite scroll) -->
+      <div class="column-loop-set" aria-hidden="true">
+        <article
+          *ngFor="let photo of rightColumnPhotos()"
+          class="photo-item"
+          (click)="openPhoto(photo)"
+          tabindex="0"
+          (keydown.enter)="openPhoto(photo)"
+          [attr.aria-label]="photo.title">
+          <div class="photo-img-box">
+            <img
+              [src]="photo.thumbSrc || photo.src"
+              [alt]="photo.title"
+              decoding="async"
+              class="photo-img" />
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Floating Minimal Footer -->
+  <aside class="stream-floating-hud" aria-label="Pied de page">
+    <div class="hud-left">
+      <a href="mailto:huutai.tran33@gmail.com" class="hud-email">contact : huutai.tran33@gmail.com</a>
+    </div>
+
+    <div class="hud-right">
+      <span class="hud-year">2026</span>
+    </div>
+  </aside>
+
+</section>
