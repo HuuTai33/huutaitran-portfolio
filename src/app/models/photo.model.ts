@@ -28,9 +28,3 @@ export interface PhotoSeries {
   year: string;
   location: string;
 }
-
-export interface FilterOption {
-  id: string;
-  label: string;
-  count: number;
-}

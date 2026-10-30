@@ -29,7 +29,6 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  @ViewChild('streamContainer') streamContainerRef?: ElementRef<HTMLElement>;
   @ViewChild('colLeft') colLeftRef?: ElementRef<HTMLElement>;
   @ViewChild('colLeftSet') colLeftSetRef?: ElementRef<HTMLElement>;
   @ViewChild('colRight') colRightRef?: ElementRef<HTMLElement>;
@@ -220,9 +219,5 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   openPhoto(photo: Photo) {
     if (this.isDragging()) return;
     this.photosService.openLightbox(photo);
-  }
-
-  selectCategory(categoryId: string) {
-    this.photosService.setCategory(categoryId);
   }
 }

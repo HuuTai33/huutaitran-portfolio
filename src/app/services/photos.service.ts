@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { ALL_PHOTOS, PHOTO_SERIES } from '../data/photos.data';
-import { FilterOption, Photo, PhotoSeries } from '../models/photo.model';
+import { Photo, PhotoSeries } from '../models/photo.model';
 
 /**
  * Fisher-Yates shuffle algorithm for uniform random distribution
@@ -23,33 +23,18 @@ export class PhotosService {
   
   readonly selectedCategory = signal<string>('all');
   readonly selectedSeries = signal<string | null>(null);
-  readonly displayMode = signal<'masonry' | 'editorial' | 'grid'>('masonry');
   readonly activePhotoIndex = signal<number>(-1);
   readonly isLightboxOpen = signal<boolean>(false);
   readonly isAboutOpen = signal<boolean>(false);
-  readonly searchQuery = signal<string>('');
   readonly favorites = signal<string[]>([]);
-  readonly visibleCount = signal<number>(24);
 
   readonly allPhotos = this._photos.asReadonly();
   readonly allSeries = this._series.asReadonly();
-
-  readonly filterOptions = computed<FilterOption[]>(() => {
-    const photos = this._photos();
-    return [
-      { id: 'all', label: 'Toutes les œuvres', count: photos.length },
-      { id: 'nights', label: 'Tokyo After Dark', count: photos.filter(p => p.category === 'nights').length },
-      { id: 'street', label: 'Street & Scènes', count: photos.filter(p => p.category === 'street').length },
-      { id: 'architecture', label: 'Architecture & Lignes', count: photos.filter(p => p.category === 'architecture').length },
-      { id: 'atmosphere', label: 'Poésie & Atmosphère', count: photos.filter(p => p.category === 'atmosphere').length }
-    ];
-  });
 
   readonly filteredPhotos = computed<Photo[]>(() => {
     let list = this._photos();
     const category = this.selectedCategory();
     const series = this.selectedSeries();
-    const query = this.searchQuery().trim().toLowerCase();
 
     if (series) {
       list = list.filter(p => p.seriesId === series);
@@ -57,26 +42,7 @@ export class PhotosService {
       list = list.filter(p => p.category === category);
     }
 
-    if (query) {
-      list = list.filter(p => 
-        p.title.toLowerCase().includes(query) ||
-        p.location.toLowerCase().includes(query) ||
-        (p.district && p.district.toLowerCase().includes(query)) ||
-        p.seriesTitle.toLowerCase().includes(query) ||
-        p.categoryLabel.toLowerCase().includes(query)
-      );
-    }
-
     return list;
-  });
-
-  readonly displayedPhotos = computed<Photo[]>(() => {
-    const filtered = this.filteredPhotos();
-    return filtered.slice(0, this.visibleCount());
-  });
-
-  readonly hasMorePhotos = computed<boolean>(() => {
-    return this.visibleCount() < this.filteredPhotos().length;
   });
 
   readonly activePhoto = computed<Photo | null>(() => {
@@ -86,10 +52,6 @@ export class PhotosService {
       return photos[index];
     }
     return null;
-  });
-
-  readonly featuredPhotos = computed<Photo[]>(() => {
-    return this._photos().filter(p => p.featured).slice(0, 8);
   });
 
   constructor() {
@@ -103,7 +65,6 @@ export class PhotosService {
   setCategory(categoryId: string) {
     this.selectedCategory.set(categoryId);
     this.selectedSeries.set(null);
-    this.visibleCount.set(24);
   }
 
   setSeries(seriesId: string | null) {
@@ -111,20 +72,6 @@ export class PhotosService {
     if (seriesId) {
       this.selectedCategory.set('all');
     }
-    this.visibleCount.set(24);
-  }
-
-  setDisplayMode(mode: 'masonry' | 'editorial' | 'grid') {
-    this.displayMode.set(mode);
-  }
-
-  setSearchQuery(query: string) {
-    this.searchQuery.set(query);
-    this.visibleCount.set(24);
-  }
-
-  loadMore() {
-    this.visibleCount.update(count => count + 24);
   }
 
   openLightbox(photo: Photo) {
