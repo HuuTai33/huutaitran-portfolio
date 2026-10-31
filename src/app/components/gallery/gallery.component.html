@@ -19,11 +19,11 @@
           (click)="openPhoto(photo)"
           tabindex="0"
           (keydown.enter)="openPhoto(photo)"
-          [attr.aria-label]="photo.title">
+          aria-label="Agrandir la photo">
           <div class="photo-img-box">
             <img
-              [src]="photo.thumbSrc || photo.src"
-              [alt]="photo.title"
+              [src]="photo"
+              alt="Photographie"
               decoding="async"
               class="photo-img" />
           </div>
@@ -37,12 +37,11 @@
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
-          (keydown.enter)="openPhoto(photo)"
-          [attr.aria-label]="photo.title">
+          (keydown.enter)="openPhoto(photo)">
           <div class="photo-img-box">
             <img
-              [src]="photo.thumbSrc || photo.src"
-              [alt]="photo.title"
+              [src]="photo"
+              alt="Photographie"
               decoding="async"
               class="photo-img" />
           </div>
@@ -60,11 +59,11 @@
           (click)="openPhoto(photo)"
           tabindex="0"
           (keydown.enter)="openPhoto(photo)"
-          [attr.aria-label]="photo.title">
+          aria-label="Agrandir la photo">
           <div class="photo-img-box">
             <img
-              [src]="photo.thumbSrc || photo.src"
-              [alt]="photo.title"
+              [src]="photo"
+              alt="Photographie"
               decoding="async"
               class="photo-img" />
           </div>
@@ -78,12 +77,11 @@
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
-          (keydown.enter)="openPhoto(photo)"
-          [attr.aria-label]="photo.title">
+          (keydown.enter)="openPhoto(photo)">
           <div class="photo-img-box">
             <img
-              [src]="photo.thumbSrc || photo.src"
-              [alt]="photo.title"
+              [src]="photo"
+              alt="Photographie"
               decoding="async"
               class="photo-img" />
           </div>

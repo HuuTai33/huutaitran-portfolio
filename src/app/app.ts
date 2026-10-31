@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { PhotosService } from './services/photos.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +16,4 @@ import { PhotosService } from './services/photos.service';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  readonly photosService = inject(PhotosService);
-}
+export class App {}

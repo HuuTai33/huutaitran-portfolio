@@ -32,15 +32,14 @@ export class LoaderComponent implements OnInit {
     const maxTimeoutMs = 12000;
     const startTime = Date.now();
 
-    const allPhotos = this.photosService.allPhotos();
+    const allPhotos = this.photosService.photos();
     if (!allPhotos || allPhotos.length === 0) {
       setTimeout(() => this.dismissLoader(), minDelayMs);
       return;
     }
 
-    const preloadPromises = allPhotos.map(photo => {
+    const preloadPromises = allPhotos.map(src => {
       return new Promise<void>((resolve) => {
-        const src = photo.thumbSrc || photo.src;
         if (!src) {
           resolve();
           return;

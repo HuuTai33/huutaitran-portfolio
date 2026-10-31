@@ -9,11 +9,9 @@ import {
   PLATFORM_ID,
   ViewChild,
   computed,
-  effect,
   inject,
   signal
 } from '@angular/core';
-import { Photo } from '../../models/photo.model';
 import { PhotosService } from '../../services/photos.service';
 
 @Component({
@@ -34,7 +32,6 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   @ViewChild('colRight') colRightRef?: ElementRef<HTMLElement>;
   @ViewChild('colRightSet') colRightSetRef?: ElementRef<HTMLElement>;
 
-  readonly currentCategory = computed(() => this.photosService.selectedCategory());
   readonly isDragging = signal<boolean>(false);
 
   // Parallax multipliers for left and right columns
@@ -55,25 +52,15 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   private boundResetListener?: () => void;
 
   // Distribute photos into Left Column (odd photos) and Right Column (even photos)
-  readonly leftColumnPhotos = computed<Photo[]>(() => {
-    const photos = this.photosService.filteredPhotos();
+  readonly leftColumnPhotos = computed<string[]>(() => {
+    const photos = this.photosService.photos();
     return photos.filter((_, i) => i % 2 === 1);
   });
 
-  readonly rightColumnPhotos = computed<Photo[]>(() => {
-    const photos = this.photosService.filteredPhotos();
+  readonly rightColumnPhotos = computed<string[]>(() => {
+    const photos = this.photosService.photos();
     return photos.filter((_, i) => i % 2 === 0);
   });
-
-  constructor() {
-    // Reset scroll smoothly when category changes
-    effect(() => {
-      this.currentCategory();
-      this.targetScroll = 0;
-      this.currentScroll = 0;
-      this.updateTransforms();
-    });
-  }
 
   ngAfterViewInit() {
     if (!this.isBrowser) return;
@@ -231,7 +218,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     rightEl.style.transform = `translate3d(0, ${-rightOffset}px, 0)`;
   }
 
-  openPhoto(photo: Photo) {
+  openPhoto(photo: string) {
     if (this.isDragging()) return;
     this.photosService.openLightbox(photo);
   }

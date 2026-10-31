@@ -4,7 +4,7 @@
   (click)="close()"
   role="dialog"
   aria-modal="true"
-  [attr.aria-label]="photo.title">
+  aria-label="Aperçu de la photographie">
 
   <!-- Close Button -->
   <button 
@@ -22,8 +22,8 @@
   <!-- Centered Single Photo Container -->
   <div class="lightbox-photo-container" (click)="$event.stopPropagation()">
     <img 
-      [src]="photo.src" 
-      [alt]="photo.title"
+      [src]="photo" 
+      alt="Photographie agrandie"
       class="lightbox-photo-img" />
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PhotosService } from './photos.service';
+import { PhotosService, PHOTO_PATHS } from './photos.service';
 
 describe('PhotosService', () => {
   let service: PhotosService;
@@ -11,46 +11,40 @@ describe('PhotosService', () => {
 
   it('should be created and load photos collection', () => {
     expect(service).toBeTruthy();
-    expect(service.allPhotos().length).toBeGreaterThan(0);
-    expect(service.allSeries().length).toBe(4);
-  });
-
-  it('should filter photos by category', () => {
-    service.setCategory('nights');
-    expect(service.filteredPhotos().every(p => p.category === 'nights')).toBe(true);
-  });
-
-  it('should filter photos by series', () => {
-    service.setSeries('tokyo-nights');
-    expect(service.filteredPhotos().every(p => p.seriesId === 'tokyo-nights')).toBe(true);
+    expect(service.photos().length).toBe(PHOTO_PATHS.length);
   });
 
   it('should manage lightbox state', () => {
-    const photo = service.allPhotos()[0];
+    const photo = service.photos()[0];
     service.openLightbox(photo);
     expect(service.isLightboxOpen()).toBe(true);
-    expect(service.activePhoto()?.id).toBe(photo.id);
+    expect(service.activePhoto()).toBe(photo);
 
     service.nextPhoto();
     expect(service.activePhotoIndex()).toBe(1);
+
+    service.prevPhoto();
+    expect(service.activePhotoIndex()).toBe(0);
 
     service.closeLightbox();
     expect(service.isLightboxOpen()).toBe(false);
   });
 
-  it('should toggle favorites', () => {
-    const photoId = 'tokyo-1';
-    expect(service.isFavorite(photoId)).toBe(false);
-    service.toggleFavorite(photoId);
-    expect(service.isFavorite(photoId)).toBe(true);
-    service.toggleFavorite(photoId);
-    expect(service.isFavorite(photoId)).toBe(false);
+  it('should support selectPhotoByIndex and reshuffling photos', () => {
+    service.selectPhotoByIndex(3);
+    expect(service.activePhotoIndex()).toBe(3);
+
+    const initialList = [...service.photos()];
+    service.shufflePhotos();
+    const shuffledList = service.photos();
+    expect(shuffledList.length).toBe(initialList.length);
   });
 
-  it('should support reshuffling photos', () => {
-    const initialList = [...service.allPhotos()];
-    service.shufflePhotos();
-    const shuffledList = service.allPhotos();
-    expect(shuffledList.length).toBe(initialList.length);
+  it('should manage about modal state', () => {
+    expect(service.isAboutOpen()).toBe(false);
+    service.openAbout();
+    expect(service.isAboutOpen()).toBe(true);
+    service.closeAbout();
+    expect(service.isAboutOpen()).toBe(false);
   });
 });

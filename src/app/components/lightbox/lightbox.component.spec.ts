@@ -1,27 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LightboxComponent } from './lightbox.component';
 import { PhotosService } from '../../services/photos.service';
-import { Photo } from '../../models/photo.model';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('LightboxComponent', () => {
   let component: LightboxComponent;
   let fixture: ComponentFixture<LightboxComponent>;
   let photosService: PhotosService;
-
-  const mockPhoto: Photo = {
-    id: 'test-photo-1',
-    src: '/images/photo_1.jpg',
-    filename: 'photo_1.jpg',
-    title: 'Test Tokyo Street',
-    seriesId: 'street-chronicles',
-    seriesTitle: 'Street Chronicles',
-    category: 'street',
-    categoryLabel: 'Street Photography',
-    location: 'Shinjuku, Tokyo',
-    district: 'Shinjuku',
-    year: 2024,
-    aspectRatio: 'horizontal'
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -45,7 +30,7 @@ describe('LightboxComponent', () => {
   });
 
   it('should display centered photo and blurred backdrop when open', () => {
-    const photo = photosService.allPhotos()[0];
+    const photo = photosService.photos()[0];
     photosService.openLightbox(photo);
     fixture.detectChanges();
 
@@ -55,12 +40,12 @@ describe('LightboxComponent', () => {
 
     expect(backdrop).toBeTruthy();
     expect(img).toBeTruthy();
-    expect(img.getAttribute('src')).toBe(photo.src);
+    expect(img.getAttribute('src')).toBe(photo);
     expect(closeBtn).toBeTruthy();
   });
 
   it('should close lightbox when clicking close button or backdrop', () => {
-    const photo = photosService.allPhotos()[0];
+    const photo = photosService.photos()[0];
     photosService.openLightbox(photo);
     fixture.detectChanges();
 
