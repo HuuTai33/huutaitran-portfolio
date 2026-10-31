@@ -133,6 +133,30 @@ describe('WebDevelopmentComponent', () => {
     expect(homeEvent.preventDefault).toHaveBeenCalled();
   });
 
+  it('should handle touch drag and momentum when multiple projects exist', () => {
+    const multiProjects: WebProject[] = [
+      { title: 'Project 1', image: '/img1.webp', url: 'https://p1.com/' },
+      { title: 'Project 2', image: '/img2.webp', url: 'https://p2.com/' }
+    ];
+    component.projects.set(multiProjects);
+    fixture.detectChanges();
+
+    // Touch start
+    component.onTouchStart({
+      touches: [{ clientX: 200 }]
+    } as unknown as TouchEvent);
+    expect(component.isDragging()).toBe(false);
+
+    // Touch move past threshold
+    component.onTouchMove({
+      touches: [{ clientX: 180 }]
+    } as unknown as TouchEvent);
+    expect(component.isDragging()).toBe(true);
+
+    // Touch end
+    component.onTouchEnd();
+  });
+
   it('should render floating footer hud with email and copyright', () => {
     const el = fixture.nativeElement as HTMLElement;
     const footer = el.querySelector('.stream-floating-hud');

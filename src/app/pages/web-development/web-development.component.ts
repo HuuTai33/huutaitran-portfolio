@@ -46,6 +46,8 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
 
   private touchStartX = 0;
   private touchLastX = 0;
+  private touchLastTime = 0;
+  private touchVelocity = 0;
   private isPointerDown = false;
   private pointerStartX = 0;
   private pointerLastX = 0;
@@ -171,25 +173,39 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     if (this.projects().length <= 1 || e.touches.length === 0) return;
     this.touchStartX = e.touches[0].clientX;
     this.touchLastX = this.touchStartX;
+    this.touchLastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    this.touchVelocity = 0;
     this.isDragging.set(false);
   }
 
   onTouchMove(e: TouchEvent) {
     if (this.projects().length <= 1 || e.touches.length === 0) return;
     const currentX = e.touches[0].clientX;
+    const currentTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     const deltaX = this.touchLastX - currentX;
+    const timeDelta = currentTime - this.touchLastTime;
+
     if (!this.isDragging() && Math.abs(currentX - this.touchStartX) > 6) {
       this.isDragging.set(true);
     }
     if (this.isDragging()) {
+      if (timeDelta > 0) {
+        this.touchVelocity = (deltaX / timeDelta) * 16.67;
+      }
       this.touchLastX = currentX;
-      this.targetScroll += deltaX * 1.4;
+      this.touchLastTime = currentTime;
+      this.targetScroll += deltaX * 1.35;
       this.scheduleAnimation();
     }
   }
 
   onTouchEnd() {
     if (this.isDragging()) {
+      if (Math.abs(this.touchVelocity) > 1.5) {
+        const momentum = Math.max(-350, Math.min(350, this.touchVelocity * 10));
+        this.targetScroll += momentum;
+        this.scheduleAnimation();
+      }
       setTimeout(() => this.isDragging.set(false), 50);
     }
   }
