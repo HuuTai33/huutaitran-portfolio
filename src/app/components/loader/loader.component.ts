@@ -28,13 +28,13 @@ export class LoaderComponent implements OnInit {
   }
 
   private startPreloading(): void {
-    const minDelayMs = 600;
+    const minDelayMs = 2000;
     const maxTimeoutMs = 12000;
     const startTime = Date.now();
 
     const allPhotos = this.photosService.allPhotos();
     if (!allPhotos || allPhotos.length === 0) {
-      this.dismissLoader();
+      setTimeout(() => this.dismissLoader(), minDelayMs);
       return;
     }
 
