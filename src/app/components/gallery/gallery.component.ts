@@ -116,22 +116,29 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     this.isPointerDown = true;
     this.pointerStartY = e.clientY;
     this.pointerLastY = e.clientY;
-    this.isDragging.set(true);
+    this.isDragging.set(false);
   }
 
   @HostListener('window:mousemove', ['$event'])
   onPointerMove(e: MouseEvent) {
     if (!this.isPointerDown) return;
-    const deltaY = this.pointerLastY - e.clientY;
-    this.pointerLastY = e.clientY;
-    this.targetScroll += deltaY * 1.5;
+    if (!this.isDragging() && Math.abs(e.clientY - this.pointerStartY) > 6) {
+      this.isDragging.set(true);
+    }
+    if (this.isDragging()) {
+      const deltaY = this.pointerLastY - e.clientY;
+      this.pointerLastY = e.clientY;
+      this.targetScroll += deltaY * 1.5;
+    }
   }
 
   @HostListener('window:mouseup')
   onPointerUp() {
     if (this.isPointerDown) {
       this.isPointerDown = false;
-      setTimeout(() => this.isDragging.set(false), 50);
+      if (this.isDragging()) {
+        setTimeout(() => this.isDragging.set(false), 50);
+      }
     }
   }
 
@@ -140,6 +147,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     if (e.touches.length > 0) {
       this.touchStartY = e.touches[0].clientY;
       this.touchLastY = this.touchStartY;
+      this.isDragging.set(false);
     }
   }
 
@@ -147,13 +155,20 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     if (e.touches.length > 0) {
       const currentY = e.touches[0].clientY;
       const deltaY = this.touchLastY - currentY;
-      this.touchLastY = currentY;
-      this.targetScroll += deltaY * 1.4;
+      if (!this.isDragging() && Math.abs(currentY - this.touchStartY) > 6) {
+        this.isDragging.set(true);
+      }
+      if (this.isDragging()) {
+        this.touchLastY = currentY;
+        this.targetScroll += deltaY * 1.4;
+      }
     }
   }
 
   onTouchEnd() {
-    // inertia continues smoothly
+    if (this.isDragging()) {
+      setTimeout(() => this.isDragging.set(false), 50);
+    }
   }
 
   private setupEventListeners() {
