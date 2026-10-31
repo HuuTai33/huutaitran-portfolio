@@ -1,7 +1,33 @@
 <app-loader></app-loader>
 
-<div class="web-dev-container">
-  <h1 class="web-dev-title">Web development</h1>
+<main class="web-dev-container">
+  <div class="web-dev-content">
+    <header class="web-dev-header">
+      <h1 class="web-dev-title">Work listing</h1>
+    </header>
+
+    <section class="projects-grid" aria-label="Liste des réalisations web">
+      <article *ngFor="let project of projects" class="project-card">
+        <a
+          [href]="project.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-link"
+          [attr.aria-label]="'Visiter le site ' + project.title">
+          <div class="project-image-wrapper">
+            <img
+              [src]="project.image"
+              [alt]="'Aperçu du site ' + project.title"
+              class="project-image"
+              loading="lazy" />
+          </div>
+          <div class="project-info">
+            <h2 class="project-title">{{ project.title }}</h2>
+          </div>
+        </a>
+      </article>
+    </section>
+  </div>
 
   <!-- Bottom Floating Minimal Footer -->
   <aside class="stream-floating-hud" aria-label="Pied de page">
@@ -13,4 +39,4 @@
       <span class="hud-year">©2026</span>
     </div>
   </aside>
-</div>
+</main>
