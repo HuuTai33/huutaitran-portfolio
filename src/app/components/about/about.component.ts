@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
 
 @Component({
@@ -7,7 +7,8 @@ import { PhotosService } from '../../services/photos.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+  styleUrl: './about.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutComponent {
   readonly photosService = inject(PhotosService);

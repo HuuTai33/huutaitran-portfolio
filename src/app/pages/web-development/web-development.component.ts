@@ -1,6 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -25,6 +26,7 @@ export interface WebProject {
   imports: [CommonModule, LoaderComponent],
   templateUrl: './web-development.component.html',
   styleUrl: './web-development.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   private readonly zone = inject(NgZone);
@@ -40,13 +42,22 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   private targetScroll = 0;
   private currentScroll = 0;
   private animationFrameId: number | null = null;
+  private isAnimating = false;
+
   private touchStartX = 0;
   private touchLastX = 0;
   private isPointerDown = false;
   private pointerStartX = 0;
   private pointerLastX = 0;
 
+  // Cached layout width to prevent layout thrashing
+  private cachedSetWidth = 0;
+  private resizeObserver?: ResizeObserver;
+
   private boundWheelListener?: (e: WheelEvent) => void;
+  private boundResizeListener?: () => void;
+  private boundMouseMoveListener?: (e: MouseEvent) => void;
+  private boundMouseUpListener?: () => void;
 
   readonly projects = signal<readonly WebProject[]>([
     {
@@ -61,19 +72,37 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     },
   ]);
 
+  readonly trackByProject = (_index: number, project: WebProject) => project.title + project.url;
+
   ngAfterViewInit() {
     if (!this.isBrowser || this.projects().length <= 1) return;
 
+    this.measureSetWidth();
     this.setupEventListeners();
-    this.startAnimationLoop();
+    this.setupResizeObserver();
+    this.scheduleAnimation();
   }
 
   ngOnDestroy() {
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
     }
-    if (typeof window !== 'undefined' && this.boundWheelListener) {
-      window.removeEventListener('wheel', this.boundWheelListener);
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    if (typeof window !== 'undefined') {
+      if (this.boundWheelListener) {
+        window.removeEventListener('wheel', this.boundWheelListener);
+      }
+      if (this.boundResizeListener) {
+        window.removeEventListener('resize', this.boundResizeListener);
+      }
+      if (this.boundMouseMoveListener) {
+        window.removeEventListener('mousemove', this.boundMouseMoveListener);
+      }
+      if (this.boundMouseUpListener) {
+        window.removeEventListener('mouseup', this.boundMouseUpListener);
+      }
     }
   }
 
@@ -89,6 +118,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     ) {
       e.preventDefault();
       this.targetScroll += 360;
+      this.scheduleAnimation();
     } else if (
       e.key === 'ArrowLeft' ||
       e.key === 'ArrowUp' ||
@@ -97,9 +127,11 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     ) {
       e.preventDefault();
       this.targetScroll -= 360;
+      this.scheduleAnimation();
     } else if (e.key === 'Home') {
       e.preventDefault();
       this.targetScroll = 0;
+      this.scheduleAnimation();
     }
   }
 
@@ -112,7 +144,6 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     this.isDragging.set(false);
   }
 
-  @HostListener('window:mousemove', ['$event'])
   onPointerMove(e: MouseEvent) {
     if (!this.isPointerDown || this.projects().length <= 1) return;
     if (!this.isDragging() && Math.abs(e.clientX - this.pointerStartX) > 6) {
@@ -122,10 +153,10 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
       const deltaX = this.pointerLastX - e.clientX;
       this.pointerLastX = e.clientX;
       this.targetScroll += deltaX * 1.4;
+      this.scheduleAnimation();
     }
   }
 
-  @HostListener('window:mouseup')
   onPointerUp() {
     if (this.isPointerDown) {
       this.isPointerDown = false;
@@ -153,6 +184,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     if (this.isDragging()) {
       this.touchLastX = currentX;
       this.targetScroll += deltaX * 1.4;
+      this.scheduleAnimation();
     }
   }
 
@@ -169,6 +201,25 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  private measureSetWidth() {
+    const setEl = this.set1Ref?.nativeElement;
+    if (setEl?.offsetWidth) {
+      this.cachedSetWidth = setEl.offsetWidth;
+    }
+  }
+
+  private setupResizeObserver() {
+    if (typeof ResizeObserver === 'undefined') return;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      this.measureSetWidth();
+    });
+
+    if (this.set1Ref?.nativeElement) {
+      this.resizeObserver.observe(this.set1Ref.nativeElement);
+    }
+  }
+
   private setupEventListeners() {
     if (typeof window === 'undefined') return;
 
@@ -179,37 +230,64 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
         const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
         const normalizedDelta = Math.abs(delta) > 80 ? Math.sign(delta) * 120 : delta * 1.2;
         this.targetScroll += normalizedDelta;
+        this.scheduleAnimation();
       };
 
       window.addEventListener('wheel', this.boundWheelListener, { passive: false });
+
+      this.boundResizeListener = () => {
+        this.measureSetWidth();
+      };
+      window.addEventListener('resize', this.boundResizeListener, { passive: true });
+
+      this.boundMouseMoveListener = (e: MouseEvent) => {
+        if (this.isPointerDown) {
+          this.onPointerMove(e);
+        }
+      };
+      window.addEventListener('mousemove', this.boundMouseMoveListener, { passive: true });
+
+      this.boundMouseUpListener = () => {
+        if (this.isPointerDown) {
+          this.onPointerUp();
+        }
+      };
+      window.addEventListener('mouseup', this.boundMouseUpListener, { passive: true });
     });
   }
 
-  private startAnimationLoop() {
-    const loop = () => {
-      const diff = this.targetScroll - this.currentScroll;
-      if (Math.abs(diff) > 0.1) {
-        this.currentScroll += diff * 0.085;
-        this.updateTransforms();
-      }
-
-      this.animationFrameId = requestAnimationFrame(loop);
-    };
+  private scheduleAnimation() {
+    if (this.isAnimating) return;
+    this.isAnimating = true;
 
     this.zone.runOutsideAngular(() => {
-      this.animationFrameId = requestAnimationFrame(loop);
+      this.animationFrameId = requestAnimationFrame(this.animationLoop);
     });
   }
+
+  private readonly animationLoop = () => {
+    const diff = this.targetScroll - this.currentScroll;
+    if (Math.abs(diff) > 0.05) {
+      this.currentScroll += diff * 0.085;
+      this.updateTransforms();
+      this.animationFrameId = requestAnimationFrame(this.animationLoop);
+    } else {
+      this.currentScroll = this.targetScroll;
+      this.updateTransforms();
+      this.isAnimating = false;
+      this.animationFrameId = null;
+    }
+  };
 
   private updateTransforms() {
     const trackEl = this.trackRef?.nativeElement;
-    const setEl = this.set1Ref?.nativeElement;
 
-    if (!trackEl || !setEl || this.projects().length <= 1) return;
+    if (!trackEl || this.projects().length <= 1) return;
 
-    const setWidth = setEl.offsetWidth || 1000;
+    const setWidth = this.cachedSetWidth || 1000;
+
+    // Infinite wrap calculation for bidirectional horizontal scrolling
     const offset = ((this.currentScroll % setWidth) + setWidth) % setWidth;
-
     trackEl.style.transform = `translate3d(${-offset}px, 0, 0)`;
   }
 }

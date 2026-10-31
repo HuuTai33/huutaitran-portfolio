@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, PLATFORM_ID, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, PLATFORM_ID, inject, signal } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
 
 @Component({
@@ -7,7 +7,8 @@ import { PhotosService } from '../../services/photos.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './loader.component.html',
-  styleUrl: './loader.component.scss'
+  styleUrl: './loader.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
@@ -29,7 +30,7 @@ export class LoaderComponent implements OnInit {
 
   private startPreloading(): void {
     const minDelayMs = 2000;
-    const maxTimeoutMs = 12000;
+    const maxTimeoutMs = 6000;
     const startTime = Date.now();
 
     const allPhotos = this.photosService.photos();
@@ -38,7 +39,9 @@ export class LoaderComponent implements OnInit {
       return;
     }
 
-    const preloadPromises = allPhotos.map(src => {
+    // Preload only the critical above-the-fold photos for fast first render
+    const criticalPhotos = allPhotos.slice(0, 6);
+    const preloadPromises = criticalPhotos.map(src => {
       return new Promise<void>((resolve) => {
         if (!src) {
           resolve();
@@ -75,7 +78,7 @@ export class LoaderComponent implements OnInit {
       });
     });
 
-    const allImagesLoaded = Promise.all(preloadPromises);
+    const initialImagesLoaded = Promise.all(preloadPromises);
 
     const minDelayPromise = new Promise<void>((resolve) => {
       setTimeout(resolve, minDelayMs);
@@ -86,7 +89,7 @@ export class LoaderComponent implements OnInit {
     });
 
     Promise.race([
-      Promise.all([allImagesLoaded, minDelayPromise]),
+      Promise.all([initialImagesLoaded, minDelayPromise]),
       safetyTimeoutPromise
     ]).then(() => {
       const elapsed = Date.now() - startTime;

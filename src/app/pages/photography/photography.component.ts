@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { GalleryComponent } from '../../components/gallery/gallery.component';
 import { LightboxComponent } from '../../components/lightbox/lightbox.component';
 import { LoaderComponent } from '../../components/loader/loader.component';
@@ -14,6 +14,7 @@ import { LoaderComponent } from '../../components/loader/loader.component';
     LightboxComponent
   ],
   templateUrl: './photography.component.html',
-  styleUrl: './photography.component.scss'
+  styleUrl: './photography.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhotographyComponent {}

@@ -33,6 +33,15 @@ describe('WebDevelopmentComponent', () => {
   });
 
   it('should render project card for Marina J Photographie with link and image in single project view', () => {
+    component.projects.set([
+      {
+        title: 'Marina J Photographie',
+        image: '/images/work_dev/converted_webp/marinajphotographie.webp',
+        url: 'https://www.marinajphotographie.fr/',
+      }
+    ]);
+    fixture.detectChanges();
+
     const el = fixture.nativeElement as HTMLElement;
     const singleView = el.querySelector('.projects-single-view');
     expect(singleView).toBeTruthy();

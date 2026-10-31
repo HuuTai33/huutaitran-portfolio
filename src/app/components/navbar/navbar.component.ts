@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component, NgZone, OnDestroy, OnInit, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PhotosService } from '../../services/photos.service';
@@ -9,15 +9,21 @@ import { PhotosService } from '../../services/photos.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   readonly photosService = inject(PhotosService);
   private readonly router = inject(Router);
+  private readonly zone = inject(NgZone);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly isScrolled = signal<boolean>(false);
   readonly isMobileMenuOpen = signal<boolean>(false);
   readonly currentUrl = signal<string>(this.router.url);
+
+  private boundScrollListener?: () => void;
 
   readonly isHomePage = computed(() => {
     const url = this.currentUrl().split('?')[0].split('#')[0];
@@ -50,10 +56,26 @@ export class NavbarComponent {
       });
   }
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    if (typeof window !== 'undefined') {
-      this.isScrolled.set(window.scrollY > 40);
+  ngOnInit() {
+    if (!this.isBrowser) return;
+
+    this.zone.runOutsideAngular(() => {
+      this.boundScrollListener = () => {
+        const scrolled = window.scrollY > 40;
+        if (this.isScrolled() !== scrolled) {
+          this.zone.run(() => {
+            this.isScrolled.set(scrolled);
+          });
+        }
+      };
+
+      window.addEventListener('scroll', this.boundScrollListener, { passive: true });
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.isBrowser && this.boundScrollListener) {
+      window.removeEventListener('scroll', this.boundScrollListener);
     }
   }
 

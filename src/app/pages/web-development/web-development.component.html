@@ -8,7 +8,7 @@
 
     <!-- Single Project View (Centered) -->
     <section *ngIf="projects().length === 1" class="projects-single-view" aria-label="Liste des réalisations web">
-      <article *ngFor="let project of projects()" class="project-card">
+      <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
         <a
           [href]="project.url"
           target="_blank"
@@ -20,7 +20,9 @@
               [src]="project.image"
               [alt]="'Aperçu du site ' + project.title"
               class="project-image"
-              loading="lazy" />
+              loading="eager"
+              fetchpriority="high"
+              decoding="async" />
           </div>
           <div class="project-info">
             <h2 class="project-title">{{ project.title }}</h2>
@@ -41,7 +43,7 @@
       <div #track class="projects-stream-track">
         <!-- Set 1 (Measured for seamless modulo wrap) -->
         <div #set1 class="projects-loop-set">
-          <article *ngFor="let project of projects()" class="project-card">
+          <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
             <a
               [href]="project.url"
               target="_blank"
@@ -54,7 +56,8 @@
                   [src]="project.image"
                   [alt]="'Aperçu du site ' + project.title"
                   class="project-image"
-                  loading="lazy" />
+                  loading="eager"
+                  decoding="async" />
               </div>
               <div class="project-info">
                 <h2 class="project-title">{{ project.title }}</h2>
@@ -65,7 +68,7 @@
 
         <!-- Set 2 (Identical for seamless infinite scroll) -->
         <div class="projects-loop-set" aria-hidden="true">
-          <article *ngFor="let project of projects()" class="project-card">
+          <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
             <a
               [href]="project.url"
               target="_blank"
@@ -79,7 +82,8 @@
                   [src]="project.image"
                   [alt]="'Aperçu du site ' + project.title"
                   class="project-image"
-                  loading="lazy" />
+                  loading="lazy"
+                  decoding="async" />
               </div>
               <div class="project-info">
                 <h2 class="project-title">{{ project.title }}</h2>
@@ -90,7 +94,7 @@
 
         <!-- Set 3 (Identical for seamless infinite scroll on wide screens) -->
         <div class="projects-loop-set" aria-hidden="true">
-          <article *ngFor="let project of projects()" class="project-card">
+          <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
             <a
               [href]="project.url"
               target="_blank"
@@ -104,7 +108,8 @@
                   [src]="project.image"
                   [alt]="'Aperçu du site ' + project.title"
                   class="project-image"
-                  loading="lazy" />
+                  loading="lazy"
+                  decoding="async" />
               </div>
               <div class="project-info">
                 <h2 class="project-title">{{ project.title }}</h2>
@@ -115,7 +120,7 @@
 
         <!-- Set 4 (Ensures continuous coverage even for 2 items on ultra-wide screens) -->
         <div class="projects-loop-set" aria-hidden="true">
-          <article *ngFor="let project of projects()" class="project-card">
+          <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
             <a
               [href]="project.url"
               target="_blank"
@@ -129,7 +134,8 @@
                   [src]="project.image"
                   [alt]="'Aperçu du site ' + project.title"
                   class="project-image"
-                  loading="lazy" />
+                  loading="lazy"
+                  decoding="async" />
               </div>
               <div class="project-info">
                 <h2 class="project-title">{{ project.title }}</h2>

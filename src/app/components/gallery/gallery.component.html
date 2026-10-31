@@ -14,7 +14,7 @@
       <!-- Cycle Set 1 (Measured for seamless modulo wrap) -->
       <div #colLeftSet class="column-loop-set">
         <article
-          *ngFor="let photo of leftColumnPhotos()"
+          *ngFor="let photo of leftColumnPhotos(); let i = index; trackBy: trackByPhoto"
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
@@ -24,7 +24,10 @@
             <img
               [src]="photo"
               alt="Photographie"
+              [loading]="i < 2 ? 'eager' : 'lazy'"
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
               decoding="async"
+              (load)="onImageLoaded()"
               class="photo-img" />
           </div>
         </article>
@@ -33,7 +36,7 @@
       <!-- Cycle Set 2 (Identical for seamless infinite scroll) -->
       <div class="column-loop-set" aria-hidden="true">
         <article
-          *ngFor="let photo of leftColumnPhotos()"
+          *ngFor="let photo of leftColumnPhotos(); trackBy: trackByPhoto"
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
@@ -42,7 +45,9 @@
             <img
               [src]="photo"
               alt="Photographie"
+              loading="lazy"
               decoding="async"
+              (load)="onImageLoaded()"
               class="photo-img" />
           </div>
         </article>
@@ -54,7 +59,7 @@
       <!-- Cycle Set 1 (Measured for seamless modulo wrap) -->
       <div #colRightSet class="column-loop-set">
         <article
-          *ngFor="let photo of rightColumnPhotos()"
+          *ngFor="let photo of rightColumnPhotos(); let i = index; trackBy: trackByPhoto"
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
@@ -64,7 +69,10 @@
             <img
               [src]="photo"
               alt="Photographie"
+              [loading]="i < 2 ? 'eager' : 'lazy'"
+              [attr.fetchpriority]="i === 0 ? 'high' : null"
               decoding="async"
+              (load)="onImageLoaded()"
               class="photo-img" />
           </div>
         </article>
@@ -73,7 +81,7 @@
       <!-- Cycle Set 2 (Identical for seamless infinite scroll) -->
       <div class="column-loop-set" aria-hidden="true">
         <article
-          *ngFor="let photo of rightColumnPhotos()"
+          *ngFor="let photo of rightColumnPhotos(); trackBy: trackByPhoto"
           class="photo-item"
           (click)="openPhoto(photo)"
           tabindex="0"
@@ -82,7 +90,9 @@
             <img
               [src]="photo"
               alt="Photographie"
+              loading="lazy"
               decoding="async"
+              (load)="onImageLoaded()"
               class="photo-img" />
           </div>
         </article>
