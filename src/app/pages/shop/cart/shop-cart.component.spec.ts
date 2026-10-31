@@ -40,7 +40,7 @@ describe('ShopCartComponent', () => {
     const specs = (i: number) => Array.from(items[i].querySelectorAll('.cart-item-specs li')).map(li => li.textContent?.trim());
     expect(specs(0)).toEqual(['10 × 15 cm', 'Without frame']);
     expect(specs(1)).toEqual(['40 × 60 cm', 'With frame', 'Black aluminium']);
-    expect(items[0].querySelector('img')?.getAttribute('src')).toBe('/images/products/frames/converted_webp/frame - 1.webp');
+    expect(items[0].querySelector('img')?.getAttribute('src')).toBe('/images/products/frames/thumbs/frame - 1.webp');
     expect(el.querySelector('.checkout-btn')?.textContent?.trim()).toBe('Proceed to checkout');
 
     (items[0].querySelector('.remove-btn') as HTMLButtonElement).click();
@@ -56,7 +56,7 @@ describe('ShopCartComponent', () => {
 
     const el = fixture.nativeElement as HTMLElement;
     const item = el.querySelector('.cart-item') as HTMLElement;
-    expect(item.querySelector('img')?.getAttribute('src')).toBe('/images/products/books/converted_webp/book 1 - 1.webp');
+    expect(item.querySelector('img')?.getAttribute('src')).toBe('/images/products/books/thumbs/book 1 - 1.webp');
     expect(item.querySelector('.cart-item-name')?.textContent?.trim()).toBe('Photo book N° 01');
     expect(item.querySelector('.cart-item-specs li')?.textContent?.trim()).toBe('Quantity: 2');
     expect(item.querySelector('.cart-item-price')?.textContent?.trim()).toBe('€70.00');

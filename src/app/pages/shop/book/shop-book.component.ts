@@ -28,6 +28,8 @@ export class ShopBookComponent implements OnDestroy {
   readonly justAdded = signal(false);
 
   readonly imageCount = computed(() => this.book().images.length);
+  /** Slides whose image may be requested: visited ones and their neighbours (preloaded for instant navigation). */
+  readonly loadedSlides = signal<ReadonlySet<number>>(new Set());
   readonly price = computed(() => formatPrice(this.book().price, this.lang()));
 
   private pointerStartX: number | null = null;
@@ -37,6 +39,7 @@ export class ShopBookComponent implements OnDestroy {
     effect(() => {
       this.book();
       this.index.set(0);
+      this.loadedSlides.set(this.withNeighbours(new Set(), 0));
       this.quantity.set(1);
       this.justAdded.set(false);
     });
@@ -52,7 +55,9 @@ export class ShopBookComponent implements OnDestroy {
 
   goTo(i: number) {
     const count = this.imageCount();
-    this.index.set(((i % count) + count) % count);
+    const index = ((i % count) + count) % count;
+    this.index.set(index);
+    this.loadedSlides.update((loaded) => this.withNeighbours(loaded, index));
   }
 
   previous() {
@@ -112,6 +117,13 @@ export class ShopBookComponent implements OnDestroy {
     this.justAdded.set(true);
     if (this.addedTimer) clearTimeout(this.addedTimer);
     this.addedTimer = setTimeout(() => this.justAdded.set(false), 4000);
+  }
+
+  private withNeighbours(loaded: ReadonlySet<number>, index: number): ReadonlySet<number> {
+    const count = this.imageCount();
+    const wanted = [index, (index + 1) % count, (index - 1 + count) % count];
+    if (wanted.every((i) => loaded.has(i))) return loaded;
+    return new Set([...loaded, ...wanted]);
   }
 
   private setQuantity(value: number) {

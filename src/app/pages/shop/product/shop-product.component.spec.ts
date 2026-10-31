@@ -30,7 +30,7 @@ describe('ShopProductComponent', () => {
   it('should render the product image and the dimensions/frame fields', () => {
     const el = fixture.nativeElement as HTMLElement;
     expect((el.querySelector('.product-image') as HTMLImageElement).getAttribute('src'))
-      .toBe('/images/products/frames/converted_webp/frame - 4.webp');
+      .toBe('/images/products/frames/web/frame - 4.webp');
     const dims = Array.from(el.querySelectorAll('#print-dimension option')).map(o => o.textContent?.trim());
     expect(dims).toEqual(['10 × 15 cm', '13 × 18 cm', '20 × 30 cm', '30 × 45 cm', '40 × 60 cm']);
     expect(el.querySelector('#print-with-frame')).toBeTruthy();

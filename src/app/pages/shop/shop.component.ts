@@ -40,7 +40,7 @@ export class ShopComponent implements OnInit {
   readonly category = this.shopService.category;
   readonly products = this.shopService.products;
   readonly books = this.shopService.books;
-  readonly productImages = [...this.products.map((p) => p.image), ...this.books.map((b) => b.images[0])];
+  readonly productImages = [...this.products.map((p) => p.thumb), ...this.books.map((b) => b.thumbs[0])];
 
   readonly printsText = signal(this.t().shop.categories.prints);
   readonly booksText = signal(this.t().shop.categories.books);

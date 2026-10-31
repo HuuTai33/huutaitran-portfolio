@@ -34,7 +34,7 @@
         <li class="shop-card">
           <div class="shop-card-frame">
             <img
-              [src]="product.image"
+              [src]="product.thumb"
               [alt]="t().shop.altPrint + ' N° ' + formatNumber(product.number)"
               class="shop-card-image"
               [attr.loading]="i < 6 ? 'eager' : 'lazy'"
@@ -59,7 +59,7 @@
         <li class="shop-card">
           <div class="shop-card-frame">
             <img
-              [src]="book.images[0]"
+              [src]="book.thumbs[0]"
               [alt]="book.title[lang()]"
               class="shop-card-image"
               decoding="async" />

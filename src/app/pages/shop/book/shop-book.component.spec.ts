@@ -24,14 +24,25 @@ describe('ShopBookComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should render every photo of the book in the carousel with the title, description and price', () => {
+  it('should render a slide per photo with the title, description and price', () => {
     const el = fixture.nativeElement as HTMLElement;
-    const slides = Array.from(el.querySelectorAll('.carousel-image')).map((img) => img.getAttribute('src'));
-    expect(slides).toEqual(Array.from({ length: 8 }, (_, i) => `/images/products/books/converted_webp/book 1 - ${i + 1}.webp`));
+    expect(el.querySelectorAll('.carousel-slide').length).toBe(8);
+    expect(el.querySelectorAll('.thumb-image')[0].getAttribute('src')).toBe('/images/products/books/thumbs/book 1 - 1.webp');
     expect(el.querySelector('.product-title')?.textContent?.trim()).toBe(book.title.EN);
     expect(el.querySelector('.book-description')?.textContent?.trim()).toBe(book.description.EN);
     expect(el.querySelector('.book-price')?.textContent?.trim()).toBe(`€${book.price}.00`);
     expect(el.querySelector('.carousel-counter')?.textContent?.trim()).toBe('01 / 08');
+  });
+
+  it('should only load the current photo and its neighbours, then the next ones on navigation', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const loaded = () => Array.from(el.querySelectorAll('.carousel-image')).map((img) => img.getAttribute('src'));
+    const src = (n: number) => `/images/products/books/web/book 1 - ${n}.webp`;
+    expect(loaded()).toEqual([src(1), src(2), src(8)]);
+
+    (el.querySelector('.carousel-nav.next') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(loaded()).toEqual([src(1), src(2), src(3), src(8)]);
   });
 
   it('should navigate the carousel with the arrows and thumbnails, wrapping around', () => {

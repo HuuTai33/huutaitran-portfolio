@@ -4,7 +4,10 @@ import type { Language } from './language.service';
 export interface Product {
   id: string;
   number: number;
+  /** Product page image (max 1600px). */
   image: string;
+  /** Grid / cart image (max 800px). */
+  thumb: string;
 }
 
 export interface Book {
@@ -14,26 +17,31 @@ export interface Book {
   description: Record<Language, string>;
   /** Unit price in euros. */
   price: number;
-  /** All photos of the book; the first one is used as cover. */
+  /** All photos of the book (max 1600px); the first one is used as cover. */
   images: readonly string[];
+  /** Same photos in max 800px, for the grid, carousel thumbnails and cart. */
+  thumbs: readonly string[];
 }
 
 export type FrameColor = 'black' | 'silver';
 export type ShopCategory = 'prints' | 'books';
+
+// Images are generated from each "converted_webp" folder by `npm run optimize:images`.
+const FRAMES_DIR = '/images/products/frames';
+const BOOKS_DIR = '/images/products/books';
 
 const TOTAL_PRODUCTS = 10;
 
 export const PRODUCTS: readonly Product[] = Array.from({ length: TOTAL_PRODUCTS }, (_, i) => ({
   id: `frame_${i + 1}`,
   number: i + 1,
-  image: `/images/products/frames/converted_webp/frame - ${i + 1}.webp`,
+  image: `${FRAMES_DIR}/web/frame - ${i + 1}.webp`,
+  thumb: `${FRAMES_DIR}/thumbs/frame - ${i + 1}.webp`,
 }));
-
-const BOOKS_DIR = '/images/products/books/converted_webp';
 
 // Book N uses the photos "book N - 1.webp", "book N - 2.webp", ... (imageCount of them).
 // TODO: title, description and price are placeholders, replace them with the real values.
-interface BookDefinition extends Omit<Book, 'id' | 'images'> {
+interface BookDefinition extends Omit<Book, 'id' | 'images' | 'thumbs'> {
   imageCount: number;
 }
 
@@ -50,11 +58,15 @@ const BOOK_DEFINITIONS: readonly BookDefinition[] = [
   },
 ];
 
-export const BOOKS: readonly Book[] = BOOK_DEFINITIONS.map(({ imageCount, ...book }) => ({
-  ...book,
-  id: `book_${book.number}`,
-  images: Array.from({ length: imageCount }, (_, i) => `${BOOKS_DIR}/book ${book.number} - ${i + 1}.webp`),
-}));
+export const BOOKS: readonly Book[] = BOOK_DEFINITIONS.map(({ imageCount, ...book }) => {
+  const files = Array.from({ length: imageCount }, (_, i) => `book ${book.number} - ${i + 1}.webp`);
+  return {
+    ...book,
+    id: `book_${book.number}`,
+    images: files.map((f) => `${BOOKS_DIR}/web/${f}`),
+    thumbs: files.map((f) => `${BOOKS_DIR}/thumbs/${f}`),
+  };
+});
 
 export const PRINT_DIMENSIONS: readonly string[] = [
   '10 × 15 cm',

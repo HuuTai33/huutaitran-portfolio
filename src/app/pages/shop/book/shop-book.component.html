@@ -29,14 +29,15 @@
               [attr.aria-label]="formatNumber(i + 1) + ' / ' + formatNumber(imageCount())"
               [attr.aria-hidden]="i !== index()"
             >
-              <img
-                [src]="image"
-                [alt]="book().title[lang()] + ' — ' + t().shop.altBook + ' ' + (i + 1)"
-                class="carousel-image"
-                draggable="false"
-                [attr.loading]="i === 0 ? 'eager' : 'lazy'"
-                [attr.fetchpriority]="i === 0 ? 'high' : null"
-                decoding="async" />
+              @if (loadedSlides().has(i)) {
+                <img
+                  [src]="image"
+                  [alt]="book().title[lang()] + ' — ' + t().shop.altBook + ' ' + (i + 1)"
+                  class="carousel-image"
+                  draggable="false"
+                  [attr.fetchpriority]="i === 0 ? 'high' : 'low'"
+                  decoding="async" />
+              }
             </div>
           }
         </div>
@@ -58,7 +59,7 @@
 
       @if (imageCount() > 1) {
         <ul class="carousel-thumbs">
-          @for (image of book().images; track image; let i = $index) {
+          @for (image of book().thumbs; track image; let i = $index) {
             <li>
               <button
                 type="button"

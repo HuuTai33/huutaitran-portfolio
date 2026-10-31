@@ -34,7 +34,7 @@ describe('ShopComponent', () => {
     expect(btn.textContent?.trim()).toBe('View prices');
     expect(btn.getAttribute('href')).toBe('/shop/frame_1');
     const img = el.querySelector('.shop-card-image') as HTMLImageElement;
-    expect(img.getAttribute('src')).toBe('/images/products/frames/converted_webp/frame - 1.webp');
+    expect(img.getAttribute('src')).toBe('/images/products/frames/thumbs/frame - 1.webp');
   });
 
   it('should show the books with their cover and a "View price" button when "Books" is selected', async () => {
@@ -46,7 +46,7 @@ describe('ShopComponent', () => {
     expect(el.querySelectorAll('.category-link')[1].getAttribute('aria-pressed')).toBe('true');
     const cards = el.querySelectorAll('.shop-card');
     expect(cards.length).toBe(1);
-    expect(cards[0].querySelector('img')?.getAttribute('src')).toBe('/images/products/books/converted_webp/book 1 - 1.webp');
+    expect(cards[0].querySelector('img')?.getAttribute('src')).toBe('/images/products/books/thumbs/book 1 - 1.webp');
     const btn = cards[0].querySelector('.view-prices-btn') as HTMLAnchorElement;
     expect(btn.textContent?.trim()).toBe('View price');
     expect(btn.getAttribute('href')).toBe('/shop/book_1');

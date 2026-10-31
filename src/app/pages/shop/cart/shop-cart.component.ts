@@ -42,7 +42,7 @@ export class ShopCartComponent {
         return [{
           key: item.key,
           productId: book.id,
-          image: book.images[0],
+          image: book.thumbs[0],
           alt: title,
           name: title,
           specs: [`${t.quantity}${lang === 'FR' ? ' : ' : ': '}${item.quantity}`],
@@ -56,7 +56,7 @@ export class ShopCartComponent {
       return [{
         key: item.key,
         productId: product.id,
-        image: product.image,
+        image: product.thumb,
         alt: `${t.altPrint} ${label}`,
         name: `${t.printLabel} ${label}`,
         specs: [
