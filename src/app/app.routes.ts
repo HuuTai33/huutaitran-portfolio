@@ -7,20 +7,20 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: 'HuuTai Tran'
+    title: 'HuuTai Tran',
   },
   {
     path: 'photography',
     component: PhotographyComponent,
-    title: 'Photography — HuuTai Tran'
+    title: 'HuuTai Tran',
   },
   {
     path: 'web_development',
     component: WebDevelopmentComponent,
-    title: 'Web development — HuuTai Tran'
+    title: 'HuuTai Tran',
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];

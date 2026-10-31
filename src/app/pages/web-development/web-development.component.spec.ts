@@ -19,6 +19,12 @@ describe('WebDevelopmentComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should render loader component', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const loader = el.querySelector('app-loader');
+    expect(loader).toBeTruthy();
+  });
+
   it('should display centered "Web development" text', () => {
     const el = fixture.nativeElement as HTMLElement;
     const title = el.querySelector('.web-dev-title');
