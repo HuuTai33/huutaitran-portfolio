@@ -89,6 +89,12 @@ describe('NavbarComponent', () => {
     expect(component.isMobileMenuOpen()).toBe(true);
 
     const el = fixture.nativeElement as HTMLElement;
+    const header = el.querySelector('header');
+    expect(header?.classList.contains('menu-open')).toBe(true);
+
+    const brandTitle = el.querySelector('.header-container .brand-title');
+    expect(brandTitle?.textContent?.trim()).toBe('HuuTai Tran');
+
     const drawerLinks = Array.from(el.querySelectorAll('.drawer-links .drawer-item')).map(a => a.textContent?.trim());
     expect(drawerLinks).toContain('About');
     expect(drawerLinks).toContain('Instagram');
@@ -99,6 +105,7 @@ describe('NavbarComponent', () => {
     component.closeMobileMenu();
     fixture.detectChanges();
     expect(component.isMobileMenuOpen()).toBe(false);
+    expect(header?.classList.contains('menu-open')).toBe(false);
     expect(document.body.style.overflow).toBe('');
   });
 

@@ -1,7 +1,8 @@
 <header
   class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
-  [class.glass-nav]="isScrolled()"
-  [class.nav-transparent]="!isScrolled()">
+  [class.glass-nav]="isScrolled() && !isMobileMenuOpen()"
+  [class.nav-transparent]="!isScrolled() || isMobileMenuOpen()"
+  [class.menu-open]="isMobileMenuOpen()">
 
   <div class="header-container">
     <!-- Brand Logo (Left) -->
