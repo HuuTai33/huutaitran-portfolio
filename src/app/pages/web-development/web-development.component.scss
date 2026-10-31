@@ -1,0 +1,21 @@
+.web-dev-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  background-color: var(--bg-primary, #0a0a0c);
+  user-select: none;
+}
+
+.web-dev-title {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text-main, #f5f5f7);
+  text-align: center;
+  margin: 0;
+}

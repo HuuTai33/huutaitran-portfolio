@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
-import { GalleryComponent } from './components/gallery/gallery.component';
-import { LightboxComponent } from './components/lightbox/lightbox.component';
-import { LoaderComponent } from './components/loader/loader.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PhotosService } from './services/photos.service';
 
@@ -12,10 +10,8 @@ import { PhotosService } from './services/photos.service';
   standalone: true,
   imports: [
     CommonModule,
-    LoaderComponent,
+    RouterOutlet,
     NavbarComponent,
-    GalleryComponent,
-    LightboxComponent,
     AboutComponent
   ],
   templateUrl: './app.html',

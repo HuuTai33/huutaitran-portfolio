@@ -5,7 +5,7 @@
 
   <div class="header-container">
     <!-- Brand Logo (Left) -->
-    <a href="#" (click)="scrollToTop($event)" class="brand-link" aria-label="HuuTai Tran - Accueil">
+    <a routerLink="/" (click)="closeMobileMenu()" class="brand-link" aria-label="HuuTai Tran - Accueil">
       <span class="brand-title">HuuTai Tran</span>
     </a>
 
@@ -25,9 +25,7 @@
         Instagram
       </a>
       <a
-        href="https://github.com"
-        target="_blank"
-        rel="noopener noreferrer"
+        routerLink="/web_development"
         class="nav-item">
         Web development
       </a>
@@ -73,9 +71,7 @@
         Instagram
       </a>
       <a
-        href="https://github.com"
-        target="_blank"
-        rel="noopener noreferrer"
+        routerLink="/web_development"
         (click)="closeMobileMenu()"
         class="drawer-item">
         Web development
