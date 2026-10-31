@@ -51,7 +51,8 @@ export interface Translations {
     close: string;
     closeEsc: string;
     altPhoto: string;
-    printInquiry: string;
+    printInquiryTitle: string;
+    printInquirySubtitle: string;
     contactCta: string;
   };
   loader: {
@@ -79,7 +80,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       bio3: 'Whether through code or photography, he is driven by the same curiosity: observing the world, exploring ideas and creating something meaningful.',
       workTogetherTitle: "Let's work together",
       workTogetherBio1: "Available for new projects, whether it's for web projects or photography assignments.",
-      workTogetherBio2: "Seen a photograph you like? Feel free to get in touch if you're interested in ordering a print of any photograph featured on this website.",
+      workTogetherBio2: "Seen a photo you like? Feel free to get in touch if you're interested in ordering a print of any photo featured on this website.",
       contactCta: 'Get in touch',
     },
     home: {
@@ -108,7 +109,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       close: 'Close',
       closeEsc: 'Close (Esc)',
       altPhoto: 'Enlarged photography',
-      printInquiry: 'Interested in a print of this photo? We can discuss dimensions and a quote together',
+      printInquiryTitle: 'Interested in a print of this photo?',
+      printInquirySubtitle: 'We can discuss dimensions and a quote together',
       contactCta: 'Get in touch',
     },
     loader: {
@@ -134,7 +136,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       bio3: 'Que ce soit à travers le code ou la photographie, il est animé par la même curiosité : observer le monde, explorer des idées et créer quelque chose qui a du sens.',
       workTogetherTitle: 'Travaillons ensemble',
       workTogetherBio1: "Disponible pour de nouveaux projets, qu'il s'agisse de projets web ou de missions photographiques.",
-      workTogetherBio2: "Une photo vous plaît ? N'hésitez pas à me contacter si vous souhaitez commander un tirage d'une photographie présentée sur ce site.",
+      workTogetherBio2: "Une photo vous plaît ? N'hésitez pas à me contacter si vous souhaitez commander un tirage d'une photo présentée sur ce site.",
       contactCta: 'Me contacter',
     },
     home: {
@@ -163,7 +165,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       close: 'Fermer',
       closeEsc: 'Fermer (Échap)',
       altPhoto: 'Photographie agrandie',
-      printInquiry: 'Vous souhaitez un tirage de cette photo ? Nous pouvons voir ensemble pour les dimensions et un devis',
+      printInquiryTitle: 'Vous souhaitez un tirage de cette photo ?',
+      printInquirySubtitle: 'Nous pouvons voir ensemble pour les dimensions et un devis',
       contactCta: 'Me contacter',
     },
     loader: {
