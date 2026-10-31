@@ -6,8 +6,9 @@
       <h1 class="web-dev-title">Work listing</h1>
     </header>
 
-    <section class="projects-grid" aria-label="Liste des réalisations web">
-      <article *ngFor="let project of projects" class="project-card">
+    <!-- Single Project View (Centered) -->
+    <section *ngIf="projects().length === 1" class="projects-single-view" aria-label="Liste des réalisations web">
+      <article *ngFor="let project of projects()" class="project-card">
         <a
           [href]="project.url"
           target="_blank"
@@ -26,6 +27,117 @@
           </div>
         </a>
       </article>
+    </section>
+
+    <!-- Multiple Projects Horizontal Infinite Stream View -->
+    <section
+      *ngIf="projects().length > 1"
+      class="projects-stream-viewport"
+      aria-label="Liste des réalisations web en défilement infini horizontal"
+      (mousedown)="onPointerDown($event)"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()">
+      <div #track class="projects-stream-track">
+        <!-- Set 1 (Measured for seamless modulo wrap) -->
+        <div #set1 class="projects-loop-set">
+          <article *ngFor="let project of projects()" class="project-card">
+            <a
+              [href]="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-link"
+              (click)="onLinkClick($event)"
+              [attr.aria-label]="'Visiter le site ' + project.title">
+              <div class="project-image-wrapper">
+                <img
+                  [src]="project.image"
+                  [alt]="'Aperçu du site ' + project.title"
+                  class="project-image"
+                  loading="lazy" />
+              </div>
+              <div class="project-info">
+                <h2 class="project-title">{{ project.title }}</h2>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <!-- Set 2 (Identical for seamless infinite scroll) -->
+        <div class="projects-loop-set" aria-hidden="true">
+          <article *ngFor="let project of projects()" class="project-card">
+            <a
+              [href]="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              tabindex="-1"
+              class="project-link"
+              (click)="onLinkClick($event)"
+              [attr.aria-label]="'Visiter le site ' + project.title">
+              <div class="project-image-wrapper">
+                <img
+                  [src]="project.image"
+                  [alt]="'Aperçu du site ' + project.title"
+                  class="project-image"
+                  loading="lazy" />
+              </div>
+              <div class="project-info">
+                <h2 class="project-title">{{ project.title }}</h2>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <!-- Set 3 (Identical for seamless infinite scroll on wide screens) -->
+        <div class="projects-loop-set" aria-hidden="true">
+          <article *ngFor="let project of projects()" class="project-card">
+            <a
+              [href]="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              tabindex="-1"
+              class="project-link"
+              (click)="onLinkClick($event)"
+              [attr.aria-label]="'Visiter le site ' + project.title">
+              <div class="project-image-wrapper">
+                <img
+                  [src]="project.image"
+                  [alt]="'Aperçu du site ' + project.title"
+                  class="project-image"
+                  loading="lazy" />
+              </div>
+              <div class="project-info">
+                <h2 class="project-title">{{ project.title }}</h2>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <!-- Set 4 (Ensures continuous coverage even for 2 items on ultra-wide screens) -->
+        <div class="projects-loop-set" aria-hidden="true">
+          <article *ngFor="let project of projects()" class="project-card">
+            <a
+              [href]="project.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              tabindex="-1"
+              class="project-link"
+              (click)="onLinkClick($event)"
+              [attr.aria-label]="'Visiter le site ' + project.title">
+              <div class="project-image-wrapper">
+                <img
+                  [src]="project.image"
+                  [alt]="'Aperçu du site ' + project.title"
+                  class="project-image"
+                  loading="lazy" />
+              </div>
+              <div class="project-info">
+                <h2 class="project-title">{{ project.title }}</h2>
+              </div>
+            </a>
+          </article>
+        </div>
+      </div>
     </section>
   </div>
 
