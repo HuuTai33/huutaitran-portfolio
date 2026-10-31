@@ -1,11 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartItem, CartService } from '../../../services/cart.service';
+import { CartService } from '../../../services/cart.service';
 import { LanguageService } from '../../../services/language.service';
-import { Product, ShopService } from '../../../services/shop.service';
+import { ShopService, formatPrice } from '../../../services/shop.service';
 
-interface CartLine extends CartItem {
-  product: Product;
+interface CartLine {
+  key: string;
+  productId: string;
+  image: string;
+  alt: string;
+  name: string;
+  specs: string[];
+  price: string | null;
 }
 
 @Component({
@@ -19,16 +25,49 @@ interface CartLine extends CartItem {
 export class ShopCartComponent {
   private readonly cartService = inject(CartService);
   private readonly shopService = inject(ShopService);
-  readonly t = inject(LanguageService).t;
+  private readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
 
   readonly isRestored = this.cartService.isRestored;
 
-  readonly lines = computed<CartLine[]>(() =>
-    this.cartService.items().flatMap((item) => {
+  readonly lines = computed<CartLine[]>(() => {
+    const t = this.t().shop;
+    const lang = this.languageService.currentLang();
+
+    return this.cartService.items().flatMap((item): CartLine[] => {
+      if (item.type === 'book') {
+        const book = this.shopService.getBook(item.productId);
+        if (!book) return [];
+        const title = book.title[lang];
+        return [{
+          key: item.key,
+          productId: book.id,
+          image: book.images[0],
+          alt: title,
+          name: title,
+          specs: [`${t.quantity}${lang === 'FR' ? ' : ' : ': '}${item.quantity}`],
+          price: formatPrice(book.price * item.quantity, lang),
+        }];
+      }
+
       const product = this.shopService.getProduct(item.productId);
-      return product ? [{ ...item, product }] : [];
-    })
-  );
+      if (!product) return [];
+      const label = `N° ${this.formatNumber(product.number)}`;
+      return [{
+        key: item.key,
+        productId: product.id,
+        image: product.image,
+        alt: `${t.altPrint} ${label}`,
+        name: `${t.printLabel} ${label}`,
+        specs: [
+          item.dimension,
+          item.withFrame ? t.withFrame : t.withoutFrame,
+          ...(item.frameColor ? [t.frameColors[item.frameColor]] : []),
+        ],
+        price: null,
+      }];
+    });
+  });
 
   formatNumber(n: number): string {
     return String(n).padStart(2, '0');

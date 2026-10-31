@@ -49,4 +49,17 @@ describe('ShopCartComponent', () => {
     expect(cart.count()).toBe(1);
     cart.clear();
   });
+
+  it('should show a book with its first photo, title, quantity and total price', () => {
+    cart.addBook('book_1', 2);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const item = el.querySelector('.cart-item') as HTMLElement;
+    expect(item.querySelector('img')?.getAttribute('src')).toBe('/images/products/books/converted_webp/book 1 - 1.webp');
+    expect(item.querySelector('.cart-item-name')?.textContent?.trim()).toBe('Photo book N° 01');
+    expect(item.querySelector('.cart-item-specs li')?.textContent?.trim()).toBe('Quantity: 2');
+    expect(item.querySelector('.cart-item-price')?.textContent?.trim()).toBe('€70.00');
+    cart.clear();
+  });
 });

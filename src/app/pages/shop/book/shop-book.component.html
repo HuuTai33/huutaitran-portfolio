@@ -1,0 +1,116 @@
+<section class="product-container">
+  <a routerLink="/shop" class="back-link">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>{{ t().shop.backToBooks }}</span>
+  </a>
+
+  <div class="product-layout">
+    <div class="book-gallery">
+      <div
+        class="carousel"
+        role="region"
+        aria-roledescription="carousel"
+        [attr.aria-label]="t().shop.ariaCarousel"
+        tabindex="0"
+        (keydown)="onKeydown($event)"
+        (pointerdown)="onPointerDown($event)"
+        (pointerup)="onPointerUp($event)"
+        (pointercancel)="onPointerCancel()"
+      >
+        <div class="carousel-track" [style.transform]="'translateX(-' + index() * 100 + '%)'">
+          @for (image of book().images; track image; let i = $index) {
+            <div
+              class="carousel-slide"
+              role="group"
+              aria-roledescription="slide"
+              [attr.aria-label]="formatNumber(i + 1) + ' / ' + formatNumber(imageCount())"
+              [attr.aria-hidden]="i !== index()"
+            >
+              <img
+                [src]="image"
+                [alt]="book().title[lang()] + ' — ' + t().shop.altBook + ' ' + (i + 1)"
+                class="carousel-image"
+                draggable="false"
+                [attr.loading]="i === 0 ? 'eager' : 'lazy'"
+                [attr.fetchpriority]="i === 0 ? 'high' : null"
+                decoding="async" />
+            </div>
+          }
+        </div>
+
+        @if (imageCount() > 1) {
+          <button type="button" class="carousel-nav prev" (click)="previous()" [attr.aria-label]="t().shop.previousImage">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="carousel-nav next" (click)="next()" [attr.aria-label]="t().shop.nextImage">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <p class="carousel-counter" aria-live="polite">{{ formatNumber(index() + 1) }} / {{ formatNumber(imageCount()) }}</p>
+        }
+      </div>
+
+      @if (imageCount() > 1) {
+        <ul class="carousel-thumbs">
+          @for (image of book().images; track image; let i = $index) {
+            <li>
+              <button
+                type="button"
+                class="thumb"
+                [class.active]="i === index()"
+                [attr.aria-current]="i === index() ? 'true' : null"
+                [attr.aria-label]="t().shop.showImage + ' ' + (i + 1)"
+                (click)="goTo(i)"
+              >
+                <img [src]="image" alt="" class="thumb-image" loading="lazy" decoding="async" />
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="product-details">
+      <h1 class="product-title">{{ book().title[lang()] }}</h1>
+      <p class="book-price">{{ price() }}</p>
+      <p class="book-description">{{ book().description[lang()] }}</p>
+
+      <div class="product-form">
+        <div class="field">
+          <label for="book-quantity" class="field-label">{{ t().shop.quantity }}</label>
+          <div class="quantity-control">
+            <button type="button" class="quantity-btn" (click)="decrement()" [disabled]="quantity() <= 1" [attr.aria-label]="t().shop.decreaseQuantity">−</button>
+            <input
+              id="book-quantity"
+              type="number"
+              class="quantity-input"
+              inputmode="numeric"
+              min="1"
+              [attr.max]="maxQuantity"
+              [value]="quantity()"
+              (change)="onQuantityInput($event)" />
+            <button type="button" class="quantity-btn" (click)="increment()" [disabled]="quantity() >= maxQuantity" [attr.aria-label]="t().shop.increaseQuantity">+</button>
+          </div>
+        </div>
+
+        <button type="button" class="add-to-cart-btn" (click)="addToCart()">
+          <span>{{ t().shop.addToCart }}</span>
+        </button>
+
+        <p class="added-feedback" role="status" aria-live="polite">
+          @if (justAdded()) {
+            <span>{{ t().shop.addedToCart }}</span>
+            <span class="feedback-sep" aria-hidden="true">—</span>
+            <a routerLink="/shop/cart" class="feedback-link">{{ t().shop.viewCart }}</a>
+          }
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

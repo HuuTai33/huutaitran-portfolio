@@ -2,31 +2,80 @@
 
 <section class="shop-container">
   <header class="shop-header">
-    <h1 class="shop-title">{{ t().shop.title }}</h1>
+    <h1 class="shop-title">
+      <span class="visually-hidden">{{ t().shop.title }}</span>
+      <span class="shop-categories" role="group" [attr.aria-label]="t().shop.ariaCategories">
+        <button
+          type="button"
+          class="category-link"
+          [class.active]="category() === 'prints'"
+          [attr.aria-pressed]="category() === 'prints'"
+          [attr.aria-label]="t().shop.categories.prints"
+          (click)="selectCategory('prints')"
+          (mouseenter)="onHover('prints')"
+        >{{ printsText() }}</button>
+        <span class="category-divider" aria-hidden="true">|</span>
+        <button
+          type="button"
+          class="category-link"
+          [class.active]="category() === 'books'"
+          [attr.aria-pressed]="category() === 'books'"
+          [attr.aria-label]="t().shop.categories.books"
+          (click)="selectCategory('books')"
+          (mouseenter)="onHover('books')"
+        >{{ booksText() }}</button>
+      </span>
+    </h1>
   </header>
 
-  <ul class="prints-grid" [attr.aria-label]="t().shop.ariaGrid">
-    @for (product of products; track product.id; let i = $index) {
-      <li class="print-card">
-        <div class="print-frame">
-          <img
-            [src]="product.image"
-            [alt]="t().shop.altPrint + ' N° ' + formatNumber(product.number)"
-            class="print-image"
-            [attr.loading]="i < 6 ? 'eager' : 'lazy'"
-            decoding="async" />
-          <div class="print-overlay">
-            <a [routerLink]="['/shop', product.id]" class="view-prices-btn">
-              <span>{{ t().shop.viewPrices }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </a>
+  @if (category() === 'prints') {
+    <ul class="shop-grid" [attr.aria-label]="t().shop.ariaGrid">
+      @for (product of products; track product.id; let i = $index) {
+        <li class="shop-card">
+          <div class="shop-card-frame">
+            <img
+              [src]="product.image"
+              [alt]="t().shop.altPrint + ' N° ' + formatNumber(product.number)"
+              class="shop-card-image"
+              [attr.loading]="i < 6 ? 'eager' : 'lazy'"
+              decoding="async" />
+            <div class="shop-card-overlay">
+              <a [routerLink]="['/shop', product.id]" class="view-prices-btn">
+                <span>{{ t().shop.viewPrices }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
           </div>
-        </div>
-        <p class="print-caption">{{ t().shop.printLabel }} N° {{ formatNumber(product.number) }}</p>
-      </li>
-    }
-  </ul>
+          <p class="shop-card-caption">{{ t().shop.printLabel }} N° {{ formatNumber(product.number) }}</p>
+        </li>
+      }
+    </ul>
+  } @else {
+    <ul class="shop-grid" [attr.aria-label]="t().shop.ariaBooksGrid">
+      @for (book of books; track book.id) {
+        <li class="shop-card">
+          <div class="shop-card-frame">
+            <img
+              [src]="book.images[0]"
+              [alt]="book.title[lang()]"
+              class="shop-card-image"
+              decoding="async" />
+            <div class="shop-card-overlay">
+              <a [routerLink]="['/shop', book.id]" class="view-prices-btn">
+                <span>{{ t().shop.viewPrice }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <p class="shop-card-caption">{{ book.title[lang()] }}</p>
+        </li>
+      }
+    </ul>
+  }
 </section>

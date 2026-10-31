@@ -15,29 +15,26 @@
     @if (lines().length === 0) {
       <div class="cart-empty">
         <p class="cart-empty-text">{{ t().shop.cartEmpty }}</p>
-        <a routerLink="/shop" class="cart-empty-link">{{ t().shop.title }}</a>
+        <a routerLink="/shop" class="cart-empty-link">{{ t().shop.browseShop }}</a>
       </div>
     } @else {
       <ul class="cart-list" [attr.aria-label]="t().shop.ariaCartList">
         @for (line of lines(); track line.key) {
           <li class="cart-item">
-            <a [routerLink]="['/shop', line.product.id]" class="cart-thumb">
-              <img
-                [src]="line.product.image"
-                [alt]="t().shop.altPrint + ' N° ' + formatNumber(line.product.number)"
-                class="cart-thumb-image"
-                decoding="async" />
+            <a [routerLink]="['/shop', line.productId]" class="cart-thumb">
+              <img [src]="line.image" [alt]="line.alt" class="cart-thumb-image" decoding="async" />
             </a>
 
             <div class="cart-info">
-              <p class="cart-item-name">{{ t().shop.printLabel }} N° {{ formatNumber(line.product.number) }}</p>
+              <p class="cart-item-name">{{ line.name }}</p>
               <ul class="cart-item-specs">
-                <li>{{ line.dimension }}</li>
-                <li>{{ line.withFrame ? t().shop.withFrame : t().shop.withoutFrame }}</li>
-                @if (line.frameColor) {
-                  <li>{{ t().shop.frameColors[line.frameColor] }}</li>
+                @for (spec of line.specs; track $index) {
+                  <li>{{ spec }}</li>
                 }
               </ul>
+              @if (line.price) {
+                <p class="cart-item-price">{{ line.price }}</p>
+              }
               <button type="button" class="remove-btn" (click)="remove(line.key)">
                 {{ t().shop.removeItem }}
               </button>

@@ -125,6 +125,13 @@
   color: rgba(255, 255, 255, 0.65);
 }
 
+.cart-item-price {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
 .remove-btn {
   @include shared.ghost-button;
 }

@@ -5,11 +5,12 @@ import { map } from 'rxjs/operators';
 import { CartService } from '../../../services/cart.service';
 import { LanguageService } from '../../../services/language.service';
 import { FrameColor, ShopService } from '../../../services/shop.service';
+import { ShopBookComponent } from '../book/shop-book.component';
 
 @Component({
   selector: 'app-shop-product',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, ShopBookComponent],
   templateUrl: './shop-product.component.html',
   styleUrl: './shop-product.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,6 +29,7 @@ export class ShopProductComponent implements OnDestroy {
     initialValue: this.route.snapshot.paramMap.get('id'),
   });
   readonly product = computed(() => this.shopService.getProduct(this.productId()));
+  readonly book = computed(() => this.shopService.getBook(this.productId()));
 
   readonly dimension = signal<string>(this.dimensions[0]);
   readonly withFrame = signal<boolean>(false);
@@ -38,7 +40,12 @@ export class ShopProductComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      if (!this.product()) {
+      // Remember the category so "back" from a product returns to the matching list on /shop.
+      if (this.product()) {
+        this.shopService.category.set('prints');
+      } else if (this.book()) {
+        this.shopService.category.set('books');
+      } else {
         this.router.navigate(['/shop'], { replaceUrl: true });
       }
     });

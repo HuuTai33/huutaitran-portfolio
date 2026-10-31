@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ShopProductComponent } from './shop-product.component';
 import { CartService } from '../../../services/cart.service';
+import { ShopService } from '../../../services/shop.service';
 
 describe('ShopProductComponent', () => {
   let fixture: ComponentFixture<ShopProductComponent>;
@@ -61,5 +62,25 @@ describe('ShopProductComponent', () => {
     ]);
     expect(el.querySelector('.added-feedback')?.textContent).toContain('Added to cart');
     cart.clear();
+  });
+});
+
+describe('ShopProductComponent (book)', () => {
+  it('should render the book page for a book id', async () => {
+    const paramMap = convertToParamMap({ id: 'book_1' });
+    await TestBed.configureTestingModule({
+      imports: [ShopProductComponent],
+      providers: [
+        provideRouter([]),
+        { provide: ActivatedRoute, useValue: { paramMap: of(paramMap), snapshot: { paramMap } } }
+      ]
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(ShopProductComponent);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-shop-book')).toBeTruthy();
+    expect(el.querySelector('#print-dimension')).toBeNull();
+    expect(TestBed.inject(ShopService).category()).toBe('books');
   });
 });

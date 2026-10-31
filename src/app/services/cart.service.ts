@@ -1,16 +1,26 @@
 import { Injectable, OnDestroy, PLATFORM_ID, afterNextRender, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { FRAME_COLORS, FrameColor, PRINT_DIMENSIONS, PRODUCTS } from './shop.service';
+import { BOOKS, FRAME_COLORS, FrameColor, PRINT_DIMENSIONS, PRODUCTS } from './shop.service';
 
-export interface CartItem {
+export interface PrintCartItem {
   key: string;
+  type: 'print';
   productId: string;
   dimension: string;
   withFrame: boolean;
   frameColor: FrameColor | null;
 }
 
-export type NewCartItem = Omit<CartItem, 'key'>;
+export interface BookCartItem {
+  key: string;
+  type: 'book';
+  productId: string;
+  quantity: number;
+}
+
+export type CartItem = PrintCartItem | BookCartItem;
+
+export type NewCartItem = Omit<PrintCartItem, 'key' | 'type'>;
 
 interface StoredCart {
   items: CartItem[];
@@ -19,17 +29,44 @@ interface StoredCart {
 
 export const CART_STORAGE_KEY = 'huutaitran_cart';
 export const CART_TTL_MS = 30 * 60 * 1000;
+export const MAX_BOOK_QUANTITY = 10;
 
-function isValidItem(item: unknown): item is CartItem {
-  if (!item || typeof item !== 'object') return false;
-  const i = item as CartItem;
-  return (
-    typeof i.key === 'string' &&
+function isValidQuantity(q: unknown): q is number {
+  return Number.isInteger(q) && (q as number) >= 1 && (q as number) <= MAX_BOOK_QUANTITY;
+}
+
+function normalizeItem(item: unknown): CartItem | null {
+  if (!item || typeof item !== 'object') return null;
+  const i = item as Partial<Omit<PrintCartItem, 'type'> & Omit<BookCartItem, 'type'>> & { type?: unknown };
+  if (typeof i.key !== 'string') return null;
+
+  if (i.type === 'book') {
+    return BOOKS.some((b) => b.id === i.productId) && isValidQuantity(i.quantity)
+      ? { key: i.key, type: 'book', productId: i.productId as string, quantity: i.quantity }
+      : null;
+  }
+
+  // Items saved before books existed have no type: they are prints.
+  if (i.type !== undefined && i.type !== 'print') return null;
+  const valid =
     PRODUCTS.some((p) => p.id === i.productId) &&
-    PRINT_DIMENSIONS.includes(i.dimension) &&
+    PRINT_DIMENSIONS.includes(i.dimension as string) &&
     typeof i.withFrame === 'boolean' &&
-    (i.withFrame ? FRAME_COLORS.includes(i.frameColor as FrameColor) : i.frameColor === null)
-  );
+    (i.withFrame ? FRAME_COLORS.includes(i.frameColor as FrameColor) : i.frameColor === null);
+  return valid
+    ? {
+        key: i.key,
+        type: 'print',
+        productId: i.productId as string,
+        dimension: i.dimension as string,
+        withFrame: i.withFrame as boolean,
+        frameColor: (i.frameColor ?? null) as FrameColor | null,
+      }
+    : null;
+}
+
+function createKey(): string {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 @Injectable({
@@ -40,7 +77,10 @@ export class CartService implements OnDestroy {
   private expiryTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly items = signal<CartItem[]>([]);
-  readonly count = computed(() => this.items().length);
+  /** Number of articles: a book line counts for its quantity. */
+  readonly count = computed(() =>
+    this.items().reduce((total, item) => total + (item.type === 'book' ? item.quantity : 1), 0)
+  );
   /** True once the persisted cart has been read on the client. */
   readonly isRestored = signal<boolean>(false);
 
@@ -53,13 +93,34 @@ export class CartService implements OnDestroy {
     this.clearExpiryTimer();
   }
 
-  add(item: NewCartItem): CartItem {
-    const entry: CartItem = {
+  add(item: NewCartItem): PrintCartItem {
+    const entry: PrintCartItem = {
       ...item,
+      type: 'print',
       frameColor: item.withFrame ? item.frameColor : null,
-      key: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      key: createKey(),
     };
     this.items.update((list) => [...list, entry]);
+    this.persist();
+    return entry;
+  }
+
+  /** Adds a book; if it is already in the cart its quantity is increased (capped at MAX_BOOK_QUANTITY). */
+  addBook(productId: string, quantity: number): BookCartItem | null {
+    if (!BOOKS.some((b) => b.id === productId)) return null;
+    const qty = Math.min(MAX_BOOK_QUANTITY, Math.max(1, Math.floor(quantity)));
+    const existing = this.items().find(
+      (i): i is BookCartItem => i.type === 'book' && i.productId === productId
+    );
+
+    let entry: BookCartItem;
+    if (existing) {
+      entry = { ...existing, quantity: Math.min(MAX_BOOK_QUANTITY, existing.quantity + qty) };
+      this.items.update((list) => list.map((i) => (i.key === existing.key ? entry : i)));
+    } else {
+      entry = { key: createKey(), type: 'book', productId, quantity: qty };
+      this.items.update((list) => [...list, entry]);
+    }
     this.persist();
     return entry;
   }
@@ -92,7 +153,7 @@ export class CartService implements OnDestroy {
         localStorage.removeItem(CART_STORAGE_KEY);
         return;
       }
-      this.items.set(stored.items.filter(isValidItem));
+      this.items.set(stored.items.map(normalizeItem).filter((i): i is CartItem => i !== null));
       this.scheduleExpiry(stored.expiresAt);
     } catch {
       localStorage.removeItem(CART_STORAGE_KEY);

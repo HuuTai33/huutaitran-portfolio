@@ -62,11 +62,26 @@ export interface Translations {
   };
   shop: {
     title: string;
+    categories: Record<'prints' | 'books', string>;
+    ariaCategories: string;
     ariaGrid: string;
+    ariaBooksGrid: string;
     viewPrices: string;
+    viewPrice: string;
     printLabel: string;
     altPrint: string;
+    altBook: string;
     backToShop: string;
+    backToPrints: string;
+    backToBooks: string;
+    browseShop: string;
+    quantity: string;
+    decreaseQuantity: string;
+    increaseQuantity: string;
+    ariaCarousel: string;
+    previousImage: string;
+    nextImage: string;
+    showImage: string;
     dimensions: string;
     withFrame: string;
     withoutFrame: string;
@@ -144,12 +159,27 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       ariaLoading: 'Loading website',
     },
     shop: {
-      title: 'Prints',
+      title: 'Shop',
+      categories: { prints: 'Prints', books: 'Books' },
+      ariaCategories: 'Shop categories',
       ariaGrid: 'Available prints',
+      ariaBooksGrid: 'Available books',
       viewPrices: 'View prices',
+      viewPrice: 'View price',
       printLabel: 'Print',
       altPrint: 'Photographic print',
-      backToShop: 'Back to prints',
+      altBook: 'Photo',
+      backToShop: 'Back to shop',
+      backToPrints: 'Back to prints',
+      backToBooks: 'Back to books',
+      browseShop: 'Browse the shop',
+      quantity: 'Quantity',
+      decreaseQuantity: 'Decrease quantity',
+      increaseQuantity: 'Increase quantity',
+      ariaCarousel: 'Book photos',
+      previousImage: 'Previous photo',
+      nextImage: 'Next photo',
+      showImage: 'Show photo',
       dimensions: 'Dimensions',
       withFrame: 'With frame',
       withoutFrame: 'Without frame',
@@ -225,12 +255,27 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       ariaLoading: 'Chargement du site',
     },
     shop: {
-      title: 'Tirages',
+      title: 'Boutique',
+      categories: { prints: 'Tirages', books: 'Livres' },
+      ariaCategories: 'Catégories de la boutique',
       ariaGrid: 'Tirages disponibles',
+      ariaBooksGrid: 'Livres disponibles',
       viewPrices: 'Voir les prix',
+      viewPrice: 'Voir le prix',
       printLabel: 'Tirage',
       altPrint: 'Tirage photographique',
-      backToShop: 'Retour aux tirages',
+      altBook: 'Photo',
+      backToShop: 'Retour à la boutique',
+      backToPrints: 'Retour aux tirages',
+      backToBooks: 'Retour aux livres',
+      browseShop: 'Voir la boutique',
+      quantity: 'Quantité',
+      decreaseQuantity: 'Diminuer la quantité',
+      increaseQuantity: 'Augmenter la quantité',
+      ariaCarousel: 'Photos du livre',
+      previousImage: 'Photo précédente',
+      nextImage: 'Photo suivante',
+      showImage: 'Afficher la photo',
       dimensions: 'Dimensions',
       withFrame: 'Avec cadre',
       withoutFrame: 'Sans cadre',

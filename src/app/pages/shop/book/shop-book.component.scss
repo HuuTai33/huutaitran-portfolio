@@ -1,0 +1,225 @@
+@use '../product-layout';
+
+.book-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-secondary, #121316);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  touch-action: pan-y;
+  user-select: none;
+  animation: productFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  &:focus-visible {
+    outline: 1px dashed rgba(255, 255, 255, 0.6);
+    outline-offset: 4px;
+  }
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  height: 70dvh;
+  padding: 1.5rem;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+}
+
+.carousel-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: rgba(10, 10, 12, 0.55);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 0.25s ease, border-color 0.25s ease;
+
+  &.prev {
+    left: 0.75rem;
+  }
+
+  &.next {
+    right: 0.75rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus-visible {
+    outline: 1px dashed rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+.carousel-counter {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.carousel-thumbs {
+  list-style: none;
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0 0 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.thumb {
+  display: block;
+  width: 3.5rem;
+  height: 4.5rem;
+  padding: 0.25rem;
+  background-color: var(--bg-secondary, #121316);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+
+  @media (min-width: 768px) {
+    width: 4.25rem;
+    height: 5.5rem;
+  }
+
+  &:hover,
+  &.active {
+    opacity: 1;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:focus-visible {
+    outline: 1px dashed rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+.thumb-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-price {
+  margin: -0.75rem 0 0;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.book-description {
+  margin: 0;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: pre-line;
+}
+
+.quantity-control {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.quantity-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: var(--bg-secondary, #121316);
+  color: var(--text-main, #f5f5f7);
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &:disabled {
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-gold, #e5c378);
+    outline-offset: -2px;
+  }
+}
+
+.quantity-input {
+  width: 3.5rem;
+  height: 2.75rem;
+  padding: 0;
+  background: var(--bg-secondary, #121316);
+  color: var(--text-main, #f5f5f7);
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85rem;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-gold, #e5c378);
+    outline-offset: -2px;
+  }
+}
