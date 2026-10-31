@@ -44,7 +44,9 @@ describe('PhotosService', () => {
     expect(service.isAboutOpen()).toBe(false);
     service.openAbout();
     expect(service.isAboutOpen()).toBe(true);
+    expect(document.body.style.overflow).toBe('hidden');
     service.closeAbout();
     expect(service.isAboutOpen()).toBe(false);
+    expect(document.body.style.overflow).toBe('');
   });
 });

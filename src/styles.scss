@@ -43,14 +43,17 @@ html {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   background-color: var(--bg-primary);
   color: var(--text-main);
   line-height: 1.6;
+  overscroll-behavior: none;
 }
 
 /* Custom Scrollbar */

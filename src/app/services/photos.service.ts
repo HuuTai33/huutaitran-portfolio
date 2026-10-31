@@ -47,6 +47,7 @@ export class PhotosService {
       this.isLightboxOpen.set(true);
       if (typeof document !== 'undefined') {
         document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
       }
     }
   }
@@ -55,7 +56,10 @@ export class PhotosService {
     this.isLightboxOpen.set(false);
     this.activePhotoIndex.set(-1);
     if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
+      if (!this.isAboutOpen()) {
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }
     }
   }
 
@@ -63,13 +67,17 @@ export class PhotosService {
     this.isAboutOpen.set(true);
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
     }
   }
 
   closeAbout() {
     this.isAboutOpen.set(false);
     if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
+      if (!this.isLightboxOpen()) {
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }
     }
   }
 

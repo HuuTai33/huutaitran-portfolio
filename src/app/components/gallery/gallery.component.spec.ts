@@ -54,4 +54,24 @@ describe('GalleryComponent', () => {
 
     expect(photosService.isLightboxOpen()).toBe(true);
   });
+
+  it('should handle touch drag and release without opening lightbox', () => {
+    const touchStartEvent = {
+      touches: [{ clientY: 300 }]
+    } as unknown as TouchEvent;
+    component.onTouchStart(touchStartEvent);
+
+    const touchMoveEvent = {
+      touches: [{ clientY: 200 }]
+    } as unknown as TouchEvent;
+    component.onTouchMove(touchMoveEvent);
+
+    expect(component.isDragging()).toBe(true);
+
+    const openLightboxSpy = vi.spyOn(photosService, 'openLightbox');
+    component.openPhoto(photosService.photos()[0]);
+    expect(openLightboxSpy).not.toHaveBeenCalled();
+
+    component.onTouchEnd();
+  });
 });

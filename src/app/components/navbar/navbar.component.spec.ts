@@ -94,6 +94,12 @@ describe('NavbarComponent', () => {
     expect(drawerLinks).toContain('Instagram');
     expect(drawerLinks).toContain('Photography');
     expect(drawerLinks).not.toContain('Web development');
+    expect(document.body.style.overflow).toBe('hidden');
+
+    component.closeMobileMenu();
+    fixture.detectChanges();
+    expect(component.isMobileMenuOpen()).toBe(false);
+    expect(document.body.style.overflow).toBe('');
   });
 
   it('should call photosService.openAbout when About is clicked', () => {

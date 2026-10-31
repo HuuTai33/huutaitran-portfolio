@@ -1,10 +1,12 @@
 <section
+  #galleryViewport
   class="gallery-viewport"
   [attr.aria-label]="t().gallery.ariaGallery"
   (mousedown)="onPointerDown($event)"
   (touchstart)="onTouchStart($event)"
   (touchmove)="onTouchMove($event)"
-  (touchend)="onTouchEnd()">
+  (touchend)="onTouchEnd()"
+  (touchcancel)="onTouchEnd()">
 
   <!-- Alternating Parallax Infinite Stream -->
   <div class="stream-columns-track">

@@ -7,11 +7,14 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background-color: #000000;
   user-select: none;
   touch-action: none;
+  overscroll-behavior: none;
   cursor: grab;
 
   &:active {
@@ -52,6 +55,8 @@
   flex-direction: column;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 
   @media (min-width: 768px) {
     max-width: 26rem;

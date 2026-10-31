@@ -225,6 +225,9 @@ header {
   flex-direction: column;
   justify-content: space-between;
   padding: 3rem 2rem 2.5rem;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
 
   @media (min-width: 768px) {
     display: none;

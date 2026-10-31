@@ -78,17 +78,38 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.isBrowser && this.boundScrollListener) {
-      window.removeEventListener('scroll', this.boundScrollListener);
+    if (this.isBrowser) {
+      if (this.boundScrollListener) {
+        window.removeEventListener('scroll', this.boundScrollListener);
+      }
+      this.updateBodyScrollLock(false);
     }
   }
 
   toggleMobileMenu() {
-    this.isMobileMenuOpen.update(v => !v);
+    this.isMobileMenuOpen.update(v => {
+      const next = !v;
+      this.updateBodyScrollLock(next);
+      return next;
+    });
   }
 
   closeMobileMenu() {
-    this.isMobileMenuOpen.set(false);
+    if (this.isMobileMenuOpen()) {
+      this.isMobileMenuOpen.set(false);
+      this.updateBodyScrollLock(false);
+    }
+  }
+
+  private updateBodyScrollLock(locked: boolean) {
+    if (!this.isBrowser) return;
+    if (locked) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else if (!this.photosService.isAboutOpen() && !this.photosService.isLightboxOpen()) {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    }
   }
 
   setLanguage(lang: Language) {

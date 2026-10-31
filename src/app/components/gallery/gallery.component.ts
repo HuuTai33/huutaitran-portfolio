@@ -48,12 +48,15 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   private currentScroll = 0;
   private animationFrameId: number | null = null;
   private isAnimating = false;
+  private lastFrameTime = 0;
 
   private touchStartY = 0;
   private touchLastY = 0;
+  private touchHistory: { y: number; time: number }[] = [];
   private isPointerDown = false;
   private pointerStartY = 0;
   private pointerLastY = 0;
+  private pointerHistory: { y: number; time: number }[] = [];
 
   // Cached layout dimensions to prevent layout thrashing inside animation loop
   private cachedLeftHeight = 0;
@@ -139,18 +142,22 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     this.isPointerDown = true;
     this.pointerStartY = e.clientY;
     this.pointerLastY = e.clientY;
+    this.pointerHistory = [{ y: e.clientY, time: (typeof performance !== 'undefined' ? performance.now() : Date.now()) }];
     this.isDragging.set(false);
   }
 
   onPointerMove(e: MouseEvent) {
     if (!this.isPointerDown) return;
+    const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     if (!this.isDragging() && Math.abs(e.clientY - this.pointerStartY) > 6) {
       this.isDragging.set(true);
     }
     if (this.isDragging()) {
       const deltaY = this.pointerLastY - e.clientY;
       this.pointerLastY = e.clientY;
-      this.targetScroll += deltaY * 1.5;
+      this.pointerHistory.push({ y: e.clientY, time: now });
+      this.pointerHistory = this.pointerHistory.filter(s => now - s.time <= 120);
+      this.targetScroll += deltaY * 1.35;
       this.scheduleAnimation();
     }
   }
@@ -159,8 +166,25 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     if (this.isPointerDown) {
       this.isPointerDown = false;
       if (this.isDragging()) {
+        const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+        const recent = this.pointerHistory.filter(s => now - s.time <= 120);
+        if (recent.length >= 2) {
+          const first = recent[0];
+          const last = recent[recent.length - 1];
+          const dt = last.time - first.time;
+          const dy = first.y - last.y;
+          if (dt > 10) {
+            const velocity = (dy / dt) * 16.67;
+            if (Math.abs(velocity) > 1.2) {
+              const momentum = Math.max(-2500, Math.min(2500, velocity * 22));
+              this.targetScroll += momentum;
+              this.scheduleAnimation();
+            }
+          }
+        }
         setTimeout(() => this.isDragging.set(false), 50);
       }
+      this.pointerHistory = [];
     }
   }
 
@@ -169,6 +193,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     if (e.touches.length > 0) {
       this.touchStartY = e.touches[0].clientY;
       this.touchLastY = this.touchStartY;
+      this.touchHistory = [{ y: this.touchStartY, time: (typeof performance !== 'undefined' ? performance.now() : Date.now()) }];
       this.isDragging.set(false);
     }
   }
@@ -176,13 +201,16 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   onTouchMove(e: TouchEvent) {
     if (e.touches.length > 0) {
       const currentY = e.touches[0].clientY;
+      const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
       const deltaY = this.touchLastY - currentY;
       if (!this.isDragging() && Math.abs(currentY - this.touchStartY) > 6) {
         this.isDragging.set(true);
       }
       if (this.isDragging()) {
         this.touchLastY = currentY;
-        this.targetScroll += deltaY * 1.4;
+        this.touchHistory.push({ y: currentY, time: now });
+        this.touchHistory = this.touchHistory.filter(s => now - s.time <= 120);
+        this.targetScroll += deltaY * 1.35;
         this.scheduleAnimation();
       }
     }
@@ -190,8 +218,25 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
 
   onTouchEnd() {
     if (this.isDragging()) {
+      const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+      const recent = this.touchHistory.filter(s => now - s.time <= 120);
+      if (recent.length >= 2) {
+        const first = recent[0];
+        const last = recent[recent.length - 1];
+        const dt = last.time - first.time;
+        const dy = first.y - last.y;
+        if (dt > 10) {
+          const velocity = (dy / dt) * 16.67;
+          if (Math.abs(velocity) > 1.2) {
+            const momentum = Math.max(-2500, Math.min(2500, velocity * 22));
+            this.targetScroll += momentum;
+            this.scheduleAnimation();
+          }
+        }
+      }
       setTimeout(() => this.isDragging.set(false), 50);
     }
+    this.touchHistory = [];
   }
 
   onImageLoaded() {
@@ -240,9 +285,13 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
         if (this.photosService.isLightboxOpen() || this.photosService.isAboutOpen()) return;
 
         e.preventDefault();
-        // Normalize wheel delta across trackpads & physical mouse wheels
         const delta = e.deltaY;
-        const normalizedDelta = Math.abs(delta) > 80 ? Math.sign(delta) * 120 : delta * 1.2;
+        const isTrackpad = Math.abs(delta) < 50 && !Number.isInteger(delta);
+        const normalizedDelta = Math.abs(delta) > 80
+          ? Math.sign(delta) * 130
+          : isTrackpad
+            ? delta * 1.15
+            : delta * 1.25;
         this.targetScroll += normalizedDelta;
         this.scheduleAnimation();
       };
@@ -286,11 +335,18 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private readonly animationLoop = () => {
-    // Linear interpolation (LERP) physics
+  private readonly animationLoop = (time: number) => {
+    if (!this.lastFrameTime) {
+      this.lastFrameTime = time;
+    }
+    const dt = Math.min((time - this.lastFrameTime) / 16.67, 3);
+    this.lastFrameTime = time;
+
     const diff = this.targetScroll - this.currentScroll;
-    if (Math.abs(diff) > 0.05) {
-      this.currentScroll += diff * 0.085;
+    if (Math.abs(diff) > 0.08) {
+      const lerpRate = 0.095;
+      const factor = 1 - Math.pow(1 - lerpRate, dt);
+      this.currentScroll += diff * factor;
       this.updateTransforms();
       this.animationFrameId = requestAnimationFrame(this.animationLoop);
     } else {
@@ -298,6 +354,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
       this.updateTransforms();
       this.isAnimating = false;
       this.animationFrameId = null;
+      this.lastFrameTime = 0;
     }
   };
 
