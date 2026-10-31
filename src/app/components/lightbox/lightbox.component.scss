@@ -12,9 +12,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: none;
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+  }
 }
 
 @keyframes fadeIn {
@@ -28,8 +34,8 @@
 
 .lightbox-close-btn {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 1rem;
+  right: 1rem;
   z-index: 10;
   display: flex;
   align-items: center;
@@ -48,30 +54,104 @@
     transform: scale(1.05);
   }
 
-  @media (max-width: 640px) {
-    top: 1rem;
-    right: 1rem;
+  @media (min-width: 640px) {
+    top: 1.5rem;
+    right: 1.5rem;
   }
 }
 
 .lightbox-photo-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: min(88vw, 1080px);
-  max-height: min(85vh, 880px);
+  max-width: min(92vw, 1080px);
   animation: photoZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: default;
 
   .lightbox-photo-img {
     max-width: 100%;
-    max-height: min(85vh, 880px);
+    max-height: min(72vh, 720px);
+    max-height: min(72dvh, 720px);
     width: auto;
     height: auto;
     object-fit: contain;
     box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5);
     user-select: none;
     -webkit-user-drag: none;
+
+    @media (max-height: 700px) {
+      max-height: min(60vh, 500px);
+      max-height: min(60dvh, 500px);
+    }
+  }
+
+  .lightbox-inquiry-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 48rem;
+    margin-top: 1rem;
+    text-align: center;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .lightbox-inquiry-text {
+      margin: 0;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: clamp(0.72rem, 1.2vw, 0.8125rem);
+      font-weight: 400;
+      line-height: 1.5;
+      color: rgba(245, 245, 247, 0.88);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-direct-contact {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.65rem 1.2rem;
+      background: #ffffff;
+      color: #0a0a0c;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-weight: 500;
+      font-size: 0.725rem;
+      letter-spacing: 0.02em;
+      border-radius: 0;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      @media (min-width: 640px) {
+        padding: 0.75rem 1.35rem;
+      }
+
+      svg {
+        transition: transform 0.2s ease;
+      }
+
+      &:hover {
+        background: #f0f0f2;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+
+        svg {
+          transform: translateX(3px);
+        }
+      }
+    }
   }
 }
 

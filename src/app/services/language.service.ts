@@ -51,6 +51,8 @@ export interface Translations {
     close: string;
     closeEsc: string;
     altPhoto: string;
+    printInquiry: string;
+    contactCta: string;
   };
   loader: {
     ariaLoading: string;
@@ -106,6 +108,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       close: 'Close',
       closeEsc: 'Close (Esc)',
       altPhoto: 'Enlarged photography',
+      printInquiry: 'Interested in a print of this photo? We can discuss dimensions and a quote together',
+      contactCta: 'Get in touch',
     },
     loader: {
       ariaLoading: 'Loading website',
@@ -159,6 +163,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       close: 'Fermer',
       closeEsc: 'Fermer (Échap)',
       altPhoto: 'Photographie agrandie',
+      printInquiry: 'Vous souhaitez un tirage de cette photo ? Nous pouvons voir ensemble pour les dimensions et un devis',
+      contactCta: 'Me contacter',
     },
     loader: {
       ariaLoading: 'Chargement du site',
