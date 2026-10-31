@@ -1,6 +1,7 @@
+@if (photosService.isAboutOpen()) {
 <div
-  *ngIf="photosService.isAboutOpen()"
   class="about-modal-backdrop"
+  animate.leave="is-leaving"
   (click)="close()">
 
   <div class="about-modal-container" (click)="$event.stopPropagation()">
@@ -57,3 +58,4 @@
     </div>
   </div>
 </div>
+}

@@ -57,9 +57,40 @@
   }
 }
 
+.about-modal-backdrop.is-leaving {
+  pointer-events: none;
+  animation: fadeOut 0.4s ease-in both;
+
+  .about-modal-container {
+    animation: blurHide 0.4s ease-in both;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes blurHide {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(16px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .about-modal-backdrop,
-  .about-modal-container {
+  .about-modal-container,
+  .about-modal-backdrop.is-leaving,
+  .about-modal-backdrop.is-leaving .about-modal-container {
     animation: none;
   }
 }
