@@ -243,8 +243,30 @@ header {
   touch-action: none;
   animation: fadeInMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
+  &.drawer-leaving {
+    pointer-events: none;
+    animation: fadeOutMenu 0.3s ease-in-out forwards;
+  }
+
   @media (min-width: 768px) {
     display: none;
+  }
+
+  @keyframes fadeOutMenu {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &.drawer-leaving {
+      animation-duration: 1ms;
+    }
   }
 
   .drawer-links {

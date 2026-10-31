@@ -121,8 +121,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (event) {
       event.preventDefault();
     }
-    this.closeMobileMenu();
     this.photosService.openAbout();
+    this.closeMobileMenu();
   }
 
   scrollToTop(event?: Event) {

@@ -117,6 +117,22 @@ describe('NavbarComponent', () => {
     expect(openAboutSpy).toHaveBeenCalled();
   });
 
+  it('should open About before closing the mobile menu without unlocking scroll', () => {
+    component.toggleMobileMenu();
+    const closeMenuSpy = vi.spyOn(component, 'closeMobileMenu').mockImplementation(() => {
+      expect(photosService.isAboutOpen()).toBe(true);
+      expect(document.body.style.overflow).toBe('hidden');
+    });
+
+    component.openAbout();
+    expect(closeMenuSpy).toHaveBeenCalled();
+    closeMenuSpy.mockRestore();
+    component.closeMobileMenu();
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(document.body.style.touchAction).toBe('none');
+    photosService.closeAbout();
+  });
+
   it('should display FR | EN language switch with EN active by default', () => {
     const el = fixture.nativeElement as HTMLElement;
     const langSelector = el.querySelector('.nav-links .lang-selector');
