@@ -1,8 +1,18 @@
 <div class="home-portal-container">
   <div class="home-portal-nav">
-    <a routerLink="/photography" class="portal-link" aria-label="Accéder à la galerie Photography">Photography</a>
+    <a
+      routerLink="/photography"
+      class="portal-link"
+      (mouseenter)="onHover('photography')"
+      aria-label="Accéder à la galerie Photography"
+    >{{ photographyText() }}</a>
     <span class="portal-divider" aria-hidden="true">|</span>
-    <a routerLink="/web_development" class="portal-link" aria-label="Accéder à la section Web development">Web development</a>
+    <a
+      routerLink="/web_development"
+      class="portal-link"
+      (mouseenter)="onHover('webDev')"
+      aria-label="Accéder à la section Web development"
+    >{{ webDevText() }}</a>
   </div>
 
   <!-- Bottom Floating Minimal Footer -->

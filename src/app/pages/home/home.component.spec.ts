@@ -52,4 +52,34 @@ describe('HomeComponent', () => {
     const year = el.querySelector('.hud-year');
     expect(year?.textContent).toContain('©2026');
   });
+
+  it('should trigger hover scramble animation for photography and web development', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const links = el.querySelectorAll('a.portal-link');
+
+    links[0].dispatchEvent(new MouseEvent('mouseenter'));
+    links[1].dispatchEvent(new MouseEvent('mouseenter'));
+
+    expect(component.photographyText()).toBeDefined();
+    expect(component.webDevText()).toBeDefined();
+  });
+
+  it('should scramble text and resolve back to original text', async () => {
+    let intermediateText = '';
+    await component.scramble('Photography', (val) => {
+      intermediateText = val;
+    }, 50);
+
+    expect(intermediateText).toBe('Photography');
+  });
+
+  it('should cleanup resources on destroy and restore initial texts', () => {
+    component.photographyText.set('!@#$%');
+    component.webDevText.set('^&*()');
+
+    fixture.destroy();
+
+    expect(component.photographyText()).toBe('Photography');
+    expect(component.webDevText()).toBe('Web development');
+  });
 });
