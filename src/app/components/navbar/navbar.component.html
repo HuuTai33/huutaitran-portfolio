@@ -5,36 +5,55 @@
 
   <div class="header-container">
     <!-- Brand Logo (Left) -->
-    <a routerLink="/" (click)="closeMobileMenu()" class="brand-link" aria-label="HuuTai Tran - Accueil">
+    <a routerLink="/" (click)="closeMobileMenu()" class="brand-link" [attr.aria-label]="t().nav.ariaHome">
       <span class="brand-title">HuuTai Tran</span>
     </a>
 
     <!-- Desktop Navigation (Right) -->
-    <nav class="nav-links" aria-label="Navigation principale">
+    <nav class="nav-links" [attr.aria-label]="t().nav.ariaNav">
+      <div class="lang-selector" aria-label="Langue / Language">
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="currentLang() === 'FR'"
+          (click)="setLanguage('FR')"
+          aria-label="Français">
+          FR
+        </button>
+        <span class="lang-separator" aria-hidden="true">|</span>
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="currentLang() === 'EN'"
+          (click)="setLanguage('EN')"
+          aria-label="English">
+          EN
+        </button>
+      </div>
       <a
         href="#about"
         (click)="openAbout($event)"
         class="nav-item">
-        About
+        {{ t().nav.about }}
       </a>
       <a
         href="https://www.instagram.com/trn.ht"
         target="_blank"
         rel="noopener noreferrer"
         class="nav-item">
-        Instagram
+        {{ t().nav.instagram }}
       </a>
       <a
         *ngIf="showPhotography()"
         routerLink="/photography"
         class="nav-item">
-        Photography
+        {{ t().nav.photography }}
       </a>
       <a
         *ngIf="showWebDevelopment()"
         routerLink="/web_development"
         class="nav-item">
-        Web development
+        {{ t().nav.webDevelopment }}
       </a>
     </nav>
 
@@ -44,7 +63,7 @@
       (click)="toggleMobileMenu()"
       class="mobile-toggle"
       [attr.aria-expanded]="isMobileMenuOpen()"
-      aria-label="Menu de navigation">
+      [attr.aria-label]="t().nav.ariaMenu">
       <span
         class="toggle-bar"
         [class.rotate-top]="isMobileMenuOpen()"></span>
@@ -63,11 +82,30 @@
     class="mobile-drawer">
 
     <div class="drawer-links">
+      <div class="drawer-lang-selector" aria-label="Langue / Language">
+        <button
+          type="button"
+          class="drawer-lang-btn"
+          [class.active]="currentLang() === 'FR'"
+          (click)="setLanguage('FR')"
+          aria-label="Français">
+          FR
+        </button>
+        <span class="drawer-lang-separator" aria-hidden="true">|</span>
+        <button
+          type="button"
+          class="drawer-lang-btn"
+          [class.active]="currentLang() === 'EN'"
+          (click)="setLanguage('EN')"
+          aria-label="English">
+          EN
+        </button>
+      </div>
       <a
         href="#about"
         (click)="openAbout($event)"
         class="drawer-item">
-        About
+        {{ t().nav.about }}
       </a>
       <a
         href="https://www.instagram.com/trn.ht"
@@ -75,26 +113,26 @@
         rel="noopener noreferrer"
         (click)="closeMobileMenu()"
         class="drawer-item">
-        Instagram
+        {{ t().nav.instagram }}
       </a>
       <a
         *ngIf="showPhotography()"
         routerLink="/photography"
         (click)="closeMobileMenu()"
         class="drawer-item">
-        Photography
+        {{ t().nav.photography }}
       </a>
       <a
         *ngIf="showWebDevelopment()"
         routerLink="/web_development"
         (click)="closeMobileMenu()"
         class="drawer-item">
-        Web development
+        {{ t().nav.webDevelopment }}
       </a>
     </div>
 
     <div class="drawer-footer">
-      <span>HuuTai Tran &bull; Portfolio</span>
+      <span>{{ t().nav.portfolioFooter }}</span>
     </div>
   </div>
 </header>

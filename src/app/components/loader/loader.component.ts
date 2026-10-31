@@ -1,6 +1,7 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, PLATFORM_ID, inject, signal } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-loader',
@@ -13,6 +14,8 @@ import { PhotosService } from '../../services/photos.service';
 export class LoaderComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly photosService = inject(PhotosService);
+  readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
 
   @Output() readonly completed = new EventEmitter<void>();
 

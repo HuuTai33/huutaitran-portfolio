@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, inject } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-lightbox',
@@ -12,6 +13,8 @@ import { PhotosService } from '../../services/photos.service';
 })
 export class LightboxComponent {
   readonly photosService = inject(PhotosService);
+  readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
 
   @HostListener('window:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {

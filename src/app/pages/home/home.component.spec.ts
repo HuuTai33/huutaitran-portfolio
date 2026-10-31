@@ -1,19 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { HomeComponent } from './home.component';
+import { LanguageService } from '../../services/language.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let languageService: LanguageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
-      providers: [provideRouter([])]
+      providers: [provideRouter([]), LanguageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    languageService = TestBed.inject(LanguageService);
     fixture.detectChanges();
   });
 
@@ -21,7 +24,7 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render navigation links for photography and web development', () => {
+  it('should render navigation links for photography and web development in default language EN', () => {
     const el = fixture.nativeElement as HTMLElement;
     const links = el.querySelectorAll('a.portal-link');
     expect(links.length).toBe(2);
@@ -31,6 +34,16 @@ describe('HomeComponent', () => {
 
     expect(links[1].textContent?.trim()).toBe('Web development');
     expect(links[1].getAttribute('href')).toBe('/web_development');
+  });
+
+  it('should update link texts when language changes to FR', () => {
+    languageService.setLanguage('FR');
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const links = el.querySelectorAll('a.portal-link');
+    expect(links[0].textContent?.trim()).toBe('Photographie');
+    expect(links[1].textContent?.trim()).toBe('Développement web');
   });
 
   it('should render separator between links', () => {

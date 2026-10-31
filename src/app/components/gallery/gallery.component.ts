@@ -14,6 +14,7 @@ import {
   signal
 } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-gallery',
@@ -25,6 +26,8 @@ import { PhotosService } from '../../services/photos.service';
 })
 export class GalleryComponent implements AfterViewInit, OnDestroy {
   readonly photosService = inject(PhotosService);
+  readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
   private readonly zone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);

@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  effect,
   inject,
   NgZone,
   OnInit,
@@ -10,6 +11,7 @@ import {
   signal
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-home',
@@ -24,15 +26,27 @@ export class HomeComponent implements OnInit {
   private readonly ngZone = inject(NgZone);
   private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
 
-  readonly photographyText = signal('Photography');
-  readonly webDevText = signal('Web development');
+  readonly photographyText = signal(this.t().home.photography);
+  readonly webDevText = signal(this.t().home.webDevelopment);
 
   private readonly chars = '!<>-_\\/[]{}—=+*^?#_~@0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   private activeFrameIds = new Set<number>();
   private activeTimeouts = new Set<ReturnType<typeof setTimeout>>();
   private isAnimating = false;
   private isDestroyed = false;
+
+  constructor() {
+    effect(() => {
+      const currentT = this.t();
+      if (!this.isAnimating) {
+        this.photographyText.set(currentT.home.photography);
+        this.webDevText.set(currentT.home.webDevelopment);
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (this.isBrowser) {
@@ -58,7 +72,7 @@ export class HomeComponent implements OnInit {
 
     try {
       // 1. Animer "Photography"
-      await this.scramble('Photography', (text) => this.photographyText.set(text), 600);
+      await this.scramble(this.t().home.photography, (text) => this.photographyText.set(text), 600);
 
       if (this.isDestroyed) return;
 
@@ -68,7 +82,7 @@ export class HomeComponent implements OnInit {
       if (this.isDestroyed) return;
 
       // 2. Animer "Web development"
-      await this.scramble('Web development', (text) => this.webDevText.set(text), 700);
+      await this.scramble(this.t().home.webDevelopment, (text) => this.webDevText.set(text), 700);
     } finally {
       this.isAnimating = false;
       if (!this.isDestroyed) {
@@ -81,9 +95,9 @@ export class HomeComponent implements OnInit {
     if (!this.isBrowser || this.isDestroyed) return;
     this.ngZone.runOutsideAngular(() => {
       if (target === 'photography') {
-        this.scramble('Photography', (text) => this.photographyText.set(text), 500);
+        this.scramble(this.t().home.photography, (text) => this.photographyText.set(text), 500);
       } else {
-        this.scramble('Web development', (text) => this.webDevText.set(text), 550);
+        this.scramble(this.t().home.webDevelopment, (text) => this.webDevText.set(text), 550);
       }
     });
   }
@@ -185,7 +199,7 @@ export class HomeComponent implements OnInit {
     }
     this.activeTimeouts.clear();
 
-    this.photographyText.set('Photography');
-    this.webDevText.set('Web development');
+    this.photographyText.set(this.t().home.photography);
+    this.webDevText.set(this.t().home.webDevelopment);
   }
 }

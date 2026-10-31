@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, NgZone, OnDestroy, OnInit, PLATFORM
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PhotosService } from '../../services/photos.service';
+import { Language, LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,11 +15,14 @@ import { PhotosService } from '../../services/photos.service';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   readonly photosService = inject(PhotosService);
+  readonly languageService = inject(LanguageService);
   private readonly router = inject(Router);
   private readonly zone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
+  readonly currentLang = this.languageService.currentLang;
+  readonly t = this.languageService.t;
   readonly isScrolled = signal<boolean>(false);
   readonly isMobileMenuOpen = signal<boolean>(false);
   readonly currentUrl = signal<string>(this.router.url);
@@ -85,6 +89,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   closeMobileMenu() {
     this.isMobileMenuOpen.set(false);
+  }
+
+  setLanguage(lang: Language) {
+    this.languageService.setLanguage(lang);
   }
 
   openAbout(event?: Event) {

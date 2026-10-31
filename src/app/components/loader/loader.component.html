@@ -2,7 +2,7 @@
   <div 
     class="loader-overlay" 
     [class.fade-out]="isFadingOut()" 
-    aria-label="Chargement du site"
+    [attr.aria-label]="t().loader.ariaLoading"
     role="status"
     aria-live="polite">
     <div class="loader-content">

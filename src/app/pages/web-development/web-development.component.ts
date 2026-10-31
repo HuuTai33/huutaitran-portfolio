@@ -13,6 +13,7 @@ import {
   signal
 } from '@angular/core';
 import { LoaderComponent } from '../../components/loader/loader.component';
+import { LanguageService } from '../../services/language.service';
 
 export interface WebProject {
   title: string;
@@ -32,6 +33,8 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   private readonly zone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  readonly languageService = inject(LanguageService);
+  readonly t = this.languageService.t;
 
   @ViewChild('track') trackRef?: ElementRef<HTMLElement>;
   @ViewChild('set1') set1Ref?: ElementRef<HTMLElement>;

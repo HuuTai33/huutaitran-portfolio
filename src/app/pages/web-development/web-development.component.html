@@ -3,22 +3,22 @@
 <main class="web-dev-container">
   <div class="web-dev-content">
     <header class="web-dev-header">
-      <h1 class="web-dev-title">Work listing</h1>
+      <h1 class="web-dev-title">{{ t().webDev.title }}</h1>
     </header>
 
     <!-- Single Project View (Centered) -->
-    <section *ngIf="projects().length === 1" class="projects-single-view" aria-label="Liste des réalisations web">
+    <section *ngIf="projects().length === 1" class="projects-single-view" [attr.aria-label]="t().webDev.ariaProjectsList">
       <article *ngFor="let project of projects(); trackBy: trackByProject" class="project-card">
         <a
           [href]="project.url"
           target="_blank"
           rel="noopener noreferrer"
           class="project-link"
-          [attr.aria-label]="'Visiter le site ' + project.title">
+          [attr.aria-label]="t().webDev.visitSite + ' ' + project.title">
           <div class="project-image-wrapper">
             <img
               [src]="project.image"
-              [alt]="'Aperçu du site ' + project.title"
+              [alt]="t().webDev.previewSite + ' ' + project.title"
               class="project-image"
               loading="eager"
               fetchpriority="high"
@@ -35,7 +35,7 @@
     <section
       *ngIf="projects().length > 1"
       class="projects-stream-viewport"
-      aria-label="Liste des réalisations web en défilement infini horizontal"
+      [attr.aria-label]="t().webDev.ariaProjectsStream"
       (mousedown)="onPointerDown($event)"
       (touchstart)="onTouchStart($event)"
       (touchmove)="onTouchMove($event)"
@@ -50,11 +50,11 @@
               rel="noopener noreferrer"
               class="project-link"
               (click)="onLinkClick($event)"
-              [attr.aria-label]="'Visiter le site ' + project.title">
+              [attr.aria-label]="t().webDev.visitSite + ' ' + project.title">
               <div class="project-image-wrapper">
                 <img
                   [src]="project.image"
-                  [alt]="'Aperçu du site ' + project.title"
+                  [alt]="t().webDev.previewSite + ' ' + project.title"
                   class="project-image"
                   loading="eager"
                   decoding="async" />
@@ -76,11 +76,11 @@
               tabindex="-1"
               class="project-link"
               (click)="onLinkClick($event)"
-              [attr.aria-label]="'Visiter le site ' + project.title">
+              [attr.aria-label]="t().webDev.visitSite + ' ' + project.title">
               <div class="project-image-wrapper">
                 <img
                   [src]="project.image"
-                  [alt]="'Aperçu du site ' + project.title"
+                  [alt]="t().webDev.previewSite + ' ' + project.title"
                   class="project-image"
                   loading="lazy"
                   decoding="async" />
@@ -102,11 +102,11 @@
               tabindex="-1"
               class="project-link"
               (click)="onLinkClick($event)"
-              [attr.aria-label]="'Visiter le site ' + project.title">
+              [attr.aria-label]="t().webDev.visitSite + ' ' + project.title">
               <div class="project-image-wrapper">
                 <img
                   [src]="project.image"
-                  [alt]="'Aperçu du site ' + project.title"
+                  [alt]="t().webDev.previewSite + ' ' + project.title"
                   class="project-image"
                   loading="lazy"
                   decoding="async" />
@@ -128,11 +128,11 @@
               tabindex="-1"
               class="project-link"
               (click)="onLinkClick($event)"
-              [attr.aria-label]="'Visiter le site ' + project.title">
+              [attr.aria-label]="t().webDev.visitSite + ' ' + project.title">
               <div class="project-image-wrapper">
                 <img
                   [src]="project.image"
-                  [alt]="'Aperçu du site ' + project.title"
+                  [alt]="t().webDev.previewSite + ' ' + project.title"
                   class="project-image"
                   loading="lazy"
                   decoding="async" />
@@ -148,7 +148,7 @@
   </div>
 
   <!-- Bottom Floating Minimal Footer -->
-  <aside class="stream-floating-hud" aria-label="Pied de page">
+  <aside class="stream-floating-hud" [attr.aria-label]="t().webDev.ariaFooter">
     <div class="hud-left">
       <a href="mailto:huutai.tran33@gmail.com" class="hud-email">EMAIL : huutai.tran33@gmail.com</a>
     </div>

@@ -4,19 +4,19 @@
       routerLink="/photography"
       class="portal-link"
       (mouseenter)="onHover('photography')"
-      aria-label="Accéder à la galerie Photography"
+      [attr.aria-label]="t().home.ariaPhotography"
     >{{ photographyText() }}</a>
     <span class="portal-divider" aria-hidden="true">|</span>
     <a
       routerLink="/web_development"
       class="portal-link"
       (mouseenter)="onHover('webDev')"
-      aria-label="Accéder à la section Web development"
+      [attr.aria-label]="t().home.ariaWebDev"
     >{{ webDevText() }}</a>
   </div>
 
   <!-- Bottom Floating Minimal Footer -->
-  <aside class="stream-floating-hud" aria-label="Pied de page">
+  <aside class="stream-floating-hud" [attr.aria-label]="t().home.ariaFooter">
     <div class="hud-left">
       <a href="mailto:huutai.tran33@gmail.com" class="hud-email">EMAIL : huutai.tran33@gmail.com</a>
     </div>

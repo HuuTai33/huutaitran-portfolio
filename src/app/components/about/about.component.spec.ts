@@ -1,21 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AboutComponent } from './about.component';
 import { PhotosService } from '../../services/photos.service';
+import { LanguageService } from '../../services/language.service';
 
 describe('AboutComponent', () => {
   let component: AboutComponent;
   let fixture: ComponentFixture<AboutComponent>;
   let photosService: PhotosService;
+  let languageService: LanguageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AboutComponent],
-      providers: [PhotosService]
+      providers: [PhotosService, LanguageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AboutComponent);
     component = fixture.componentInstance;
     photosService = TestBed.inject(PhotosService);
+    languageService = TestBed.inject(LanguageService);
     fixture.detectChanges();
   });
 
@@ -37,7 +40,25 @@ describe('AboutComponent', () => {
 
     const contactBtn = compiled.querySelector('.btn-direct-contact') as HTMLAnchorElement;
     expect(contactBtn).toBeTruthy();
+    expect(contactBtn.textContent).toContain('Get in touch');
     expect(contactBtn.getAttribute('href')).toBe('mailto:huutai.tran33@gmail.com');
+  });
+
+  it('should translate about content when language changes to FR', () => {
+    languageService.setLanguage('FR');
+    photosService.openAbout();
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const nameEl = compiled.querySelector('.artist-name');
+    expect(nameEl?.textContent).toContain('Développeur web / Photographe');
+
+    const bioEl = compiled.querySelector('.about-bio');
+    expect(bioEl?.textContent).toContain('Développeur Web Full Stack');
+    expect(bioEl?.textContent).toContain('photographie de rue');
+
+    const contactBtn = compiled.querySelector('.btn-direct-contact') as HTMLAnchorElement;
+    expect(contactBtn.textContent).toContain('Me contacter');
   });
 
   it('should close when close button is clicked', () => {

@@ -1,17 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WebDevelopmentComponent, WebProject } from './web-development.component';
+import { LanguageService } from '../../services/language.service';
 
 describe('WebDevelopmentComponent', () => {
   let component: WebDevelopmentComponent;
   let fixture: ComponentFixture<WebDevelopmentComponent>;
+  let languageService: LanguageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WebDevelopmentComponent]
+      imports: [WebDevelopmentComponent],
+      providers: [LanguageService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(WebDevelopmentComponent);
     component = fixture.componentInstance;
+    languageService = TestBed.inject(LanguageService);
     fixture.detectChanges();
   });
 
@@ -25,11 +29,15 @@ describe('WebDevelopmentComponent', () => {
     expect(loader).toBeTruthy();
   });
 
-  it('should display "Work listing" header', () => {
+  it('should display "Work listing" header in EN and "Réalisations" in FR', () => {
     const el = fixture.nativeElement as HTMLElement;
     const title = el.querySelector('.web-dev-title');
     expect(title).toBeTruthy();
     expect(title?.textContent?.trim()).toBe('Work listing');
+
+    languageService.setLanguage('FR');
+    fixture.detectChanges();
+    expect(title?.textContent?.trim()).toBe('Réalisations');
   });
 
   it('should render project card for Marina J Photographie with link and image in single project view', () => {

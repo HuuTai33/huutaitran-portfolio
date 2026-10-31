@@ -10,8 +10,8 @@
         type="button"
         class="about-close-btn"
         (click)="close()"
-        aria-label="Fermer"
-        title="Fermer (Échap)">
+        [attr.aria-label]="t().about.close"
+        [attr.title]="t().about.closeEsc">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -20,33 +20,34 @@
     </header>
 
     <div class="about-modal-body">
-      <h2 class="artist-name">Web developer / Photographer</h2>
+      <h2 class="artist-name">{{ t().about.roleTitle }}</h2>
 
       <div class="about-bio">
         <p>
-          HuuTai TRAN is a Full Stack Web Developer based in France, with over 5 years of experience, primarily working with Angular.
+          {{ t().about.bio1 }}
         </p>
         <p>
-          Beyond code, he is passionate about photography, especially street photography. He enjoys capturing everyday life as it unfolds, focusing on spontaneous moments, fleeting gestures and, above all, movement.
+          {{ t().about.bio2 }}
         </p>
         <p>
-          Whether through code or photography, he is driven by the same curiosity: observing the world, exploring ideas and creating something meaningful.
+          {{ t().about.bio3 }}
         </p>
       </div>
 
-      <h2 class="artist-name">Let's work together</h2>
+      <h2 class="artist-name">{{ t().about.workTogetherTitle }}</h2>
 
       <div class="about-bio">
         <p>
-          Available for new projects, whether it's for web development projects or photography assignments.
+          {{ t().about.workTogetherBio1 }}
         </p>
         <p>
-          Seen a photograph you like? Feel free to get in touch if you're interested in ordering a print of any photograph featured on this website.        </p>
+          {{ t().about.workTogetherBio2 }}
+        </p>
       </div>
 
       <div class="about-contact-cta">
         <a href="mailto:huutai.tran33@gmail.com" class="btn-direct-contact">
-          <span>Get in touch</span>
+          <span>{{ t().about.contactCta }}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>

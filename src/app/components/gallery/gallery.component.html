@@ -1,6 +1,6 @@
 <section
   class="gallery-viewport"
-  aria-label="Galerie photographique en défilement infini et parallaxe"
+  [attr.aria-label]="t().gallery.ariaGallery"
   (mousedown)="onPointerDown($event)"
   (touchstart)="onTouchStart($event)"
   (touchmove)="onTouchMove($event)"
@@ -19,11 +19,11 @@
           (click)="openPhoto(photo)"
           tabindex="0"
           (keydown.enter)="openPhoto(photo)"
-          aria-label="Agrandir la photo">
+          [attr.aria-label]="t().gallery.ariaZoom">
           <div class="photo-img-box">
             <img
               [src]="photo"
-              alt="Photographie"
+              [alt]="t().gallery.altPhoto"
               [loading]="i < 2 ? 'eager' : 'lazy'"
               [attr.fetchpriority]="i === 0 ? 'high' : null"
               decoding="async"
@@ -44,7 +44,7 @@
           <div class="photo-img-box">
             <img
               [src]="photo"
-              alt="Photographie"
+              [alt]="t().gallery.altPhoto"
               loading="lazy"
               decoding="async"
               (load)="onImageLoaded()"
@@ -64,11 +64,11 @@
           (click)="openPhoto(photo)"
           tabindex="0"
           (keydown.enter)="openPhoto(photo)"
-          aria-label="Agrandir la photo">
+          [attr.aria-label]="t().gallery.ariaZoom">
           <div class="photo-img-box">
             <img
               [src]="photo"
-              alt="Photographie"
+              [alt]="t().gallery.altPhoto"
               [loading]="i < 2 ? 'eager' : 'lazy'"
               [attr.fetchpriority]="i === 0 ? 'high' : null"
               decoding="async"
@@ -89,7 +89,7 @@
           <div class="photo-img-box">
             <img
               [src]="photo"
-              alt="Photographie"
+              [alt]="t().gallery.altPhoto"
               loading="lazy"
               decoding="async"
               (load)="onImageLoaded()"
@@ -102,7 +102,7 @@
   </div>
 
   <!-- Bottom Floating Minimal Footer -->
-  <aside class="stream-floating-hud" aria-label="Pied de page">
+  <aside class="stream-floating-hud" [attr.aria-label]="t().gallery.ariaFooter">
     <div class="hud-left">
       <a href="mailto:huutai.tran33@gmail.com" class="hud-email">EMAIL : huutai.tran33@gmail.com</a>
     </div>
