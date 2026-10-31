@@ -12,7 +12,6 @@ export interface Translations {
     ariaHome: string;
     ariaNav: string;
     ariaMenu: string;
-    portfolioFooter: string;
   };
   about: {
     close: string;
@@ -68,7 +67,6 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       ariaHome: 'HuuTai Tran - Home',
       ariaNav: 'Main navigation',
       ariaMenu: 'Navigation menu',
-      portfolioFooter: 'HuuTai Tran • Portfolio',
     },
     about: {
       close: 'Close',
@@ -122,7 +120,6 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       ariaHome: 'HuuTai Tran - Accueil',
       ariaNav: 'Navigation principale',
       ariaMenu: 'Menu de navigation',
-      portfolioFooter: 'HuuTai Tran • Portfolio',
     },
     about: {
       close: 'Fermer',
