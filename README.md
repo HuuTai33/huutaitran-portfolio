@@ -37,15 +37,29 @@ npm install
 
 ## Images
 
-Toutes les images sont dans `public/images/`. Les sous-dossiers suivent la même logique :
+Toutes les images sont dans `public/images/`, avec un dossier par page :
+
+```
+public/images/
+├── photography/        # Page /photography
+├── work_development/   # Page /web_development
+└── products/           # Boutique : tirages (frames/) et livres (books/)
+```
+
+Chaque dossier suit la même logique :
 
 - `original/` : fichiers maîtres (JPG/PNG), servent d'archive. Ils ne sont **pas** copiés dans le build.
-- `converted_webp/` : versions WebP.
+- `converted_webp/` : versions WebP (1600 px de large maximum).
 
 ### Photographie
 
-- Les photos sont dans `public/images/converted_webp/huutaitran - N.webp`.
+- Les photos sont dans `public/images/photography/converted_webp/huutaitran - N.webp`.
 - Pour en ajouter, mets à jour `TOTAL_PHOTOS` dans `src/app/services/photos.service.ts`.
+
+### Développement web
+
+- Les captures des projets sont dans `public/images/work_development/converted_webp/`.
+- Elles sont référencées dans `src/app/pages/web-development/web-development.component.ts`.
 
 ### Boutique
 
@@ -72,6 +86,8 @@ public/images/products/
 > ```
 >
 > Le script ne régénère que les images nouvelles ou modifiées. Il faut ensuite commiter les dossiers `web/` et `thumbs/`, dont le site a besoin.
+>
+> Ce script ne concerne que la boutique. Pour `photography/` et `work_development/`, il suffit d'exporter les photos directement en WebP (1600 px de large maximum) dans `converted_webp/`.
 
 ### Ajouter un produit
 

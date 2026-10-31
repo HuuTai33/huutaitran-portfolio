@@ -99,7 +99,7 @@ describe('WebDevelopmentComponent', () => {
     component.projects.set([
       {
         title: 'Marina J Photographie',
-        image: '/images/work_dev/converted_webp/marinajphotographie.webp',
+        image: '/images/work_development/converted_webp/marinajphotographie.webp',
         url: 'https://www.marinajphotographie.fr/',
       }
     ]);
@@ -119,7 +119,7 @@ describe('WebDevelopmentComponent', () => {
 
     const image = el.querySelector('.project-image') as HTMLImageElement;
     expect(image).toBeTruthy();
-    expect(image.getAttribute('src')).toBe('/images/work_dev/converted_webp/marinajphotographie.webp');
+    expect(image.getAttribute('src')).toBe('/images/work_development/converted_webp/marinajphotographie.webp');
     expect(image.getAttribute('alt')).toContain('Marina J Photographie');
 
     const projectTitle = el.querySelector('.project-title');
@@ -130,12 +130,12 @@ describe('WebDevelopmentComponent', () => {
     const multiProjects: WebProject[] = [
       {
         title: 'Project 1',
-        image: '/images/work_dev/converted_webp/p1.webp',
+        image: '/images/work_development/converted_webp/p1.webp',
         url: 'https://p1.com/'
       },
       {
         title: 'Project 2',
-        image: '/images/work_dev/converted_webp/p2.webp',
+        image: '/images/work_development/converted_webp/p2.webp',
         url: 'https://p2.com/'
       }
     ];

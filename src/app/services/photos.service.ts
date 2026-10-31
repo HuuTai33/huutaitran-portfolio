@@ -3,7 +3,7 @@ import { Injectable, computed, signal } from '@angular/core';
 const TOTAL_PHOTOS = 37;
 export const PHOTO_PATHS: readonly string[] = Array.from(
   { length: TOTAL_PHOTOS },
-  (_, i) => `/images/converted_webp/huutaitran - ${i}.webp`
+  (_, i) => `/images/photography/converted_webp/huutaitran - ${i}.webp`
 );
 
 /**

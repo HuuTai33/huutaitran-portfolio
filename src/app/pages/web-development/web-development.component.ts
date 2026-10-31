@@ -73,12 +73,12 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   readonly projects = signal<readonly WebProject[]>([
     {
       title: 'Marina J Photographie',
-      image: '/images/work_dev/converted_webp/marinajphotographie.webp',
+      image: '/images/work_development/converted_webp/marinajphotographie.webp',
       url: 'https://www.marinajphotographie.fr/',
     },
     {
       title: 'Marina J Photographie',
-      image: '/images/work_dev/converted_webp/marinajphotographie.webp',
+      image: '/images/work_development/converted_webp/marinajphotographie.webp',
       url: 'https://www.marinajphotographie.fr/',
     },
   ]);
