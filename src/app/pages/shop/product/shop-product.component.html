@@ -1,0 +1,74 @@
+@if (product(); as product) {
+  <section class="product-container">
+    <a routerLink="/shop" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>{{ t().shop.backToShop }}</span>
+    </a>
+
+    <div class="product-layout">
+      <div class="product-media">
+        <img
+          [src]="product.image"
+          [alt]="t().shop.altPrint + ' N° ' + formatNumber(product.number)"
+          class="product-image"
+          fetchpriority="high"
+          decoding="async" />
+      </div>
+
+      <div class="product-details">
+        <h1 class="product-title">{{ t().shop.printLabel }} N° {{ formatNumber(product.number) }}</h1>
+
+        <div class="product-form">
+          <div class="field">
+            <label for="print-dimension" class="field-label">{{ t().shop.dimensions }}</label>
+            <div class="select-wrapper">
+              <select id="print-dimension" class="field-select" (change)="onDimensionChange($event)">
+                @for (d of dimensions; track d) {
+                  <option [value]="d" [selected]="d === dimension()">{{ d }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="print-with-frame" class="field-label">{{ t().shop.withFrame }}</label>
+            <div class="select-wrapper">
+              <select id="print-with-frame" class="field-select" (change)="onWithFrameChange($event)">
+                <option value="no" [selected]="!withFrame()">{{ t().shop.no }}</option>
+                <option value="yes" [selected]="withFrame()">{{ t().shop.yes }}</option>
+              </select>
+            </div>
+          </div>
+
+          @if (withFrame()) {
+            <div class="field field-reveal">
+              <label for="print-frame-color" class="field-label">{{ t().shop.frameColor }}</label>
+              <div class="select-wrapper">
+                <select id="print-frame-color" class="field-select" (change)="onFrameColorChange($event)">
+                  @for (c of frameColors; track c) {
+                    <option [value]="c" [selected]="c === frameColor()">{{ t().shop.frameColors[c] }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+
+          <button type="button" class="add-to-cart-btn" (click)="addToCart()">
+            <span>{{ t().shop.addToCart }}</span>
+          </button>
+
+          <p class="added-feedback" role="status" aria-live="polite">
+            @if (justAdded()) {
+              <span>{{ t().shop.addedToCart }}</span>
+              <span class="feedback-sep" aria-hidden="true">—</span>
+              <a routerLink="/shop/cart" class="feedback-link">{{ t().shop.viewCart }}</a>
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+}

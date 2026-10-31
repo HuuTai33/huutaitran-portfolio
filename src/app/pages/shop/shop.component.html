@@ -1,0 +1,32 @@
+<app-loader [images]="productImages"></app-loader>
+
+<section class="shop-container">
+  <header class="shop-header">
+    <h1 class="shop-title">{{ t().shop.title }}</h1>
+  </header>
+
+  <ul class="prints-grid" [attr.aria-label]="t().shop.ariaGrid">
+    @for (product of products; track product.id; let i = $index) {
+      <li class="print-card">
+        <div class="print-frame">
+          <img
+            [src]="product.image"
+            [alt]="t().shop.altPrint + ' N° ' + formatNumber(product.number)"
+            class="print-image"
+            [attr.loading]="i < 6 ? 'eager' : 'lazy'"
+            decoding="async" />
+          <div class="print-overlay">
+            <a [routerLink]="['/shop', product.id]" class="view-prices-btn">
+              <span>{{ t().shop.viewPrices }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <p class="print-caption">{{ t().shop.printLabel }} N° {{ formatNumber(product.number) }}</p>
+      </li>
+    }
+  </ul>
+</section>

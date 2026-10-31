@@ -24,6 +24,28 @@ export const routes: Routes = [
     title: 'HuuTai Tran',
   },
   {
+    path: 'shop',
+    loadComponent: () =>
+      import('./pages/shop/shop.component').then((m) => m.ShopComponent),
+    title: 'HuuTai Tran',
+  },
+  {
+    path: 'shop/cart',
+    loadComponent: () =>
+      import('./pages/shop/cart/shop-cart.component').then(
+        (m) => m.ShopCartComponent
+      ),
+    title: 'HuuTai Tran',
+  },
+  {
+    path: 'shop/:id',
+    loadComponent: () =>
+      import('./pages/shop/product/shop-product.component').then(
+        (m) => m.ShopProductComponent
+      ),
+    title: 'HuuTai Tran',
+  },
+  {
     path: '**',
     redirectTo: '',
   },

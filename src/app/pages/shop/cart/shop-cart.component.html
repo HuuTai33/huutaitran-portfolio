@@ -1,0 +1,61 @@
+<section class="cart-container">
+  <a routerLink="/shop" class="back-link">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>{{ t().shop.backToShop }}</span>
+  </a>
+
+  <header class="cart-header">
+    <h1 class="cart-title">{{ t().shop.cartTitle }}</h1>
+  </header>
+
+  @if (isRestored()) {
+    @if (lines().length === 0) {
+      <div class="cart-empty">
+        <p class="cart-empty-text">{{ t().shop.cartEmpty }}</p>
+        <a routerLink="/shop" class="cart-empty-link">{{ t().shop.title }}</a>
+      </div>
+    } @else {
+      <ul class="cart-list" [attr.aria-label]="t().shop.ariaCartList">
+        @for (line of lines(); track line.key) {
+          <li class="cart-item">
+            <a [routerLink]="['/shop', line.product.id]" class="cart-thumb">
+              <img
+                [src]="line.product.image"
+                [alt]="t().shop.altPrint + ' N° ' + formatNumber(line.product.number)"
+                class="cart-thumb-image"
+                decoding="async" />
+            </a>
+
+            <div class="cart-info">
+              <p class="cart-item-name">{{ t().shop.printLabel }} N° {{ formatNumber(line.product.number) }}</p>
+              <ul class="cart-item-specs">
+                <li>{{ line.dimension }}</li>
+                <li>{{ line.withFrame ? t().shop.withFrame : t().shop.withoutFrame }}</li>
+                @if (line.frameColor) {
+                  <li>{{ t().shop.frameColors[line.frameColor] }}</li>
+                }
+              </ul>
+              <button type="button" class="remove-btn" (click)="remove(line.key)">
+                {{ t().shop.removeItem }}
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <div class="cart-footer">
+        <!-- Payment is not implemented yet: the button is intentionally inert. -->
+        <button type="button" class="checkout-btn">
+          <span>{{ t().shop.checkout }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    }
+  }
+</section>

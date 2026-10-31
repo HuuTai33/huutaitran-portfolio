@@ -6,7 +6,9 @@ export type Language = 'FR' | 'EN';
 export interface Translations {
   nav: {
     about: string;
+    shop: string;
     instagram: string;
+    ariaCart: string;
     photography: string;
     webDevelopment: string;
     ariaHome: string;
@@ -58,13 +60,38 @@ export interface Translations {
   loader: {
     ariaLoading: string;
   };
+  shop: {
+    title: string;
+    ariaGrid: string;
+    viewPrices: string;
+    printLabel: string;
+    altPrint: string;
+    backToShop: string;
+    dimensions: string;
+    withFrame: string;
+    withoutFrame: string;
+    yes: string;
+    no: string;
+    frameColor: string;
+    frameColors: Record<'black' | 'silver', string>;
+    addToCart: string;
+    addedToCart: string;
+    viewCart: string;
+    cartTitle: string;
+    cartEmpty: string;
+    ariaCartList: string;
+    removeItem: string;
+    checkout: string;
+  };
 }
 
 export const TRANSLATIONS: Record<Language, Translations> = {
   EN: {
     nav: {
       about: 'About',
+      shop: 'Shop',
       instagram: 'Instagram',
+      ariaCart: 'View cart',
       photography: 'Photography',
       webDevelopment: 'Web development',
       ariaHome: 'HuuTai Tran - Home',
@@ -116,11 +143,36 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     loader: {
       ariaLoading: 'Loading website',
     },
+    shop: {
+      title: 'Prints',
+      ariaGrid: 'Available prints',
+      viewPrices: 'View prices',
+      printLabel: 'Print',
+      altPrint: 'Photographic print',
+      backToShop: 'Back to prints',
+      dimensions: 'Dimensions',
+      withFrame: 'With frame',
+      withoutFrame: 'Without frame',
+      yes: 'Yes',
+      no: 'No',
+      frameColor: 'Frame color',
+      frameColors: { black: 'Black aluminium', silver: 'Silver aluminium' },
+      addToCart: 'Add to cart',
+      addedToCart: 'Added to cart',
+      viewCart: 'View cart',
+      cartTitle: 'Cart',
+      cartEmpty: 'Your cart is empty',
+      ariaCartList: 'Items in cart',
+      removeItem: 'Remove item',
+      checkout: 'Proceed to checkout',
+    },
   },
   FR: {
     nav: {
       about: 'À propos',
+      shop: 'Shop',
       instagram: 'Instagram',
+      ariaCart: 'Voir le panier',
       photography: 'Photographie',
       webDevelopment: 'Développement web',
       ariaHome: 'HuuTai Tran - Accueil',
@@ -171,6 +223,29 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     loader: {
       ariaLoading: 'Chargement du site',
+    },
+    shop: {
+      title: 'Tirages',
+      ariaGrid: 'Tirages disponibles',
+      viewPrices: 'Voir les prix',
+      printLabel: 'Tirage',
+      altPrint: 'Tirage photographique',
+      backToShop: 'Retour aux tirages',
+      dimensions: 'Dimensions',
+      withFrame: 'Avec cadre',
+      withoutFrame: 'Sans cadre',
+      yes: 'Oui',
+      no: 'Non',
+      frameColor: 'Couleur du cadre',
+      frameColors: { black: 'Aluminium noir', silver: 'Aluminium argenté' },
+      addToCart: 'Ajouter au panier',
+      addedToCart: 'Ajouté au panier',
+      viewCart: 'Voir le panier',
+      cartTitle: 'Panier',
+      cartEmpty: 'Votre panier est vide',
+      ariaCartList: 'Articles du panier',
+      removeItem: "Supprimer l'article",
+      checkout: 'Procéder au paiement',
     },
   },
 };

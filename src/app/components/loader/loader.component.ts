@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, PLATFORM_ID, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, PLATFORM_ID, inject, signal } from '@angular/core';
 import { PhotosService } from '../../services/photos.service';
 import { LanguageService } from '../../services/language.service';
 
@@ -16,6 +16,9 @@ export class LoaderComponent implements OnInit {
   private readonly photosService = inject(PhotosService);
   readonly languageService = inject(LanguageService);
   readonly t = this.languageService.t;
+
+  /** Images to preload before dismissing; defaults to the photography stream. */
+  @Input() images: readonly string[] | null = null;
 
   @Output() readonly completed = new EventEmitter<void>();
 
@@ -36,7 +39,7 @@ export class LoaderComponent implements OnInit {
     const maxTimeoutMs = 6000;
     const startTime = Date.now();
 
-    const allPhotos = this.photosService.photos();
+    const allPhotos = this.images ?? this.photosService.photos();
     if (!allPhotos || allPhotos.length === 0) {
       setTimeout(() => this.dismissLoader(), minDelayMs);
       return;

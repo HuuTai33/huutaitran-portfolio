@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NavbarComponent } from './navbar.component';
 import { PhotosService } from '../../services/photos.service';
 import { LanguageService } from '../../services/language.service';
+import { CartService } from '../../services/cart.service';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -20,7 +21,9 @@ describe('NavbarComponent', () => {
         provideRouter([
           { path: '', component: class {} },
           { path: 'photography', component: class {} },
-          { path: 'web_development', component: class {} }
+          { path: 'web_development', component: class {} },
+          { path: 'shop', component: class {} },
+          { path: 'shop/cart', component: class {} }
         ])
       ]
     }).compileComponents();
@@ -60,8 +63,8 @@ describe('NavbarComponent', () => {
     expect(desktopLinks).not.toContain('Photography');
     expect(desktopLinks).toContain('Web development');
 
-    // Check order: About -> Instagram -> Web development
-    expect(desktopLinks).toEqual(['About', 'Instagram', 'Web development']);
+    // Check order: About -> Shop -> Instagram -> Web development
+    expect(desktopLinks).toEqual(['About', 'Shop', 'Instagram', 'Web development']);
   });
 
   it('should show Photography and NOT Web development on /web_development route', async () => {
@@ -75,8 +78,8 @@ describe('NavbarComponent', () => {
     expect(desktopLinks).toContain('Photography');
     expect(desktopLinks).not.toContain('Web development');
 
-    // Check order: About -> Instagram -> Photography
-    expect(desktopLinks).toEqual(['About', 'Instagram', 'Photography']);
+    // Check order: About -> Shop -> Instagram -> Photography
+    expect(desktopLinks).toEqual(['About', 'Shop', 'Instagram', 'Photography']);
   });
 
   it('should toggle mobile menu drawer and display appropriate route links', async () => {
@@ -163,6 +166,33 @@ describe('NavbarComponent', () => {
     expect(buttons[1].classList.contains('active')).toBe(false);
 
     const desktopLinks = Array.from(el.querySelectorAll('.nav-links .nav-item')).map(a => a.textContent?.trim());
-    expect(desktopLinks).toEqual(['À propos', 'Instagram', 'Développement web']);
+    expect(desktopLinks).toEqual(['À propos', 'Shop', 'Instagram', 'Développement web']);
+  });
+
+  it('should show Shop link left of Instagram in the mobile drawer', () => {
+    component.toggleMobileMenu();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const drawerLinks = Array.from(el.querySelectorAll('.drawer-links .drawer-item')).map(a => a.textContent?.trim());
+    expect(drawerLinks.indexOf('Shop')).toBe(drawerLinks.indexOf('Instagram') - 1);
+    component.closeMobileMenu();
+  });
+
+  it('should show the cart icon with the item count only when the cart is not empty', () => {
+    const cart = TestBed.inject(CartService);
+    const el = fixture.nativeElement as HTMLElement;
+    cart.clear();
+    fixture.detectChanges();
+    expect(el.querySelector('.cart-link')).toBeNull();
+
+    cart.add({ productId: 'frame_1', dimension: '10 × 15 cm', withFrame: false, frameColor: null });
+    cart.add({ productId: 'frame_2', dimension: '20 × 30 cm', withFrame: true, frameColor: 'black' });
+    fixture.detectChanges();
+
+    const link = el.querySelector('.cart-link') as HTMLAnchorElement;
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('href')).toBe('/shop/cart');
+    expect(link.querySelector('.cart-badge')?.textContent?.trim()).toBe('2');
+    cart.clear();
   });
 });

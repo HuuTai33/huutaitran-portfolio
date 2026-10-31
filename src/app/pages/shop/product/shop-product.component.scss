@@ -1,0 +1,199 @@
+@use '../shop-shared' as shared;
+
+:host {
+  display: block;
+  width: 100%;
+  background-color: var(--bg-primary, #0a0a0c);
+}
+
+.product-container {
+  @include shared.page-container;
+}
+
+.back-link {
+  @include shared.back-link;
+  margin-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    margin-bottom: 3rem;
+  }
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: start;
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+
+.product-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary, #121316);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+}
+
+.product-image {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  max-height: 70dvh;
+  object-fit: contain;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  animation: productFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @media (min-width: 900px) {
+    position: sticky;
+    top: 8rem;
+  }
+}
+
+.product-title {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-main, #f5f5f7);
+  margin: 0;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.field-reveal {
+  animation: fieldReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.field-label {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.select-wrapper {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+}
+
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  padding: 0.85rem 2.5rem 0.85rem 1rem;
+  background-color: var(--bg-secondary, #121316);
+  color: var(--text-main, #f5f5f7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-gold, #e5c378);
+    outline-offset: 2px;
+  }
+
+  option {
+    background-color: var(--bg-secondary, #121316);
+    color: var(--text-main, #f5f5f7);
+  }
+}
+
+.add-to-cart-btn {
+  @include shared.primary-button;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.added-feedback {
+  min-height: 1.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+
+  .feedback-sep {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .feedback-link {
+    @include shared.underline-link;
+    color: #ffffff;
+  }
+}
+
+@keyframes productFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fieldReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

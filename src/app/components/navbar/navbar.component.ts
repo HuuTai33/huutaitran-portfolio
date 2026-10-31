@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { PhotosService } from '../../services/photos.service';
 import { Language, LanguageService } from '../../services/language.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ import { Language, LanguageService } from '../../services/language.service';
 export class NavbarComponent implements OnInit, OnDestroy {
   readonly photosService = inject(PhotosService);
   readonly languageService = inject(LanguageService);
+  private readonly cartService = inject(CartService);
   private readonly router = inject(Router);
   private readonly zone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
@@ -26,6 +28,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly isScrolled = signal<boolean>(false);
   readonly isMobileMenuOpen = this.photosService.isMobileMenuOpen;
   readonly currentUrl = signal<string>(this.router.url);
+  readonly cartCount = this.cartService.count;
 
   private boundScrollListener?: () => void;
 
@@ -42,6 +45,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly isWebDevPage = computed(() => {
     const url = this.currentUrl().split('?')[0].split('#')[0];
     return url === '/web_development' || url.startsWith('/web_development/');
+  });
+
+  readonly isShopPage = computed(() => {
+    const url = this.currentUrl().split('?')[0].split('#')[0];
+    return url === '/shop' || url.startsWith('/shop/');
   });
 
   readonly showPhotography = computed(() => {
