@@ -25,6 +25,13 @@
         Instagram
       </a>
       <a
+        *ngIf="showPhotography()"
+        routerLink="/photography"
+        class="nav-item">
+        Photography
+      </a>
+      <a
+        *ngIf="showWebDevelopment()"
         routerLink="/web_development"
         class="nav-item">
         Web development
@@ -71,6 +78,14 @@
         Instagram
       </a>
       <a
+        *ngIf="showPhotography()"
+        routerLink="/photography"
+        (click)="closeMobileMenu()"
+        class="drawer-item">
+        Photography
+      </a>
+      <a
+        *ngIf="showWebDevelopment()"
         routerLink="/web_development"
         (click)="closeMobileMenu()"
         class="drawer-item">
