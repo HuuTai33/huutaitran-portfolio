@@ -119,7 +119,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent) {
-    if (!this.isBrowser || this.photosService.isLightboxOpen() || this.photosService.isAboutOpen()) return;
+    if (!this.isBrowser || this.photosService.isMobileMenuOpen() || this.photosService.isLightboxOpen() || this.photosService.isAboutOpen()) return;
 
     if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
       e.preventDefault();
@@ -138,6 +138,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
 
   // Pointer / Drag support
   onPointerDown(e: MouseEvent) {
+    if (this.photosService.isMobileMenuOpen()) return;
     if (e.button !== 0) return; // Left click only
     this.isPointerDown = true;
     this.pointerStartY = e.clientY;
@@ -147,6 +148,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   }
 
   onPointerMove(e: MouseEvent) {
+    if (this.photosService.isMobileMenuOpen()) return;
     if (!this.isPointerDown) return;
     const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     if (!this.isDragging() && Math.abs(e.clientY - this.pointerStartY) > 6) {
@@ -163,6 +165,12 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   }
 
   onPointerUp() {
+    if (this.photosService.isMobileMenuOpen()) {
+      this.isPointerDown = false;
+      this.pointerHistory = [];
+      this.isDragging.set(false);
+      return;
+    }
     if (this.isPointerDown) {
       this.isPointerDown = false;
       if (this.isDragging()) {
@@ -190,6 +198,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
 
   // Touch Support
   onTouchStart(e: TouchEvent) {
+    if (this.photosService.isMobileMenuOpen()) return;
     if (e.touches.length > 0) {
       this.touchStartY = e.touches[0].clientY;
       this.touchLastY = this.touchStartY;
@@ -199,6 +208,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   }
 
   onTouchMove(e: TouchEvent) {
+    if (this.photosService.isMobileMenuOpen()) return;
     if (e.touches.length > 0) {
       const currentY = e.touches[0].clientY;
       const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
@@ -217,6 +227,11 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   }
 
   onTouchEnd() {
+    if (this.photosService.isMobileMenuOpen()) {
+      this.touchHistory = [];
+      this.isDragging.set(false);
+      return;
+    }
     if (this.isDragging()) {
       const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
       const recent = this.touchHistory.filter(s => now - s.time <= 120);
@@ -282,6 +297,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
 
     this.zone.runOutsideAngular(() => {
       this.boundWheelListener = (e: WheelEvent) => {
+        if (this.photosService.isMobileMenuOpen()) return;
         if (this.photosService.isLightboxOpen() || this.photosService.isAboutOpen()) return;
 
         e.preventDefault();
@@ -336,6 +352,18 @@ export class GalleryComponent implements AfterViewInit, OnDestroy {
   }
 
   private readonly animationLoop = (time: number) => {
+    if (this.photosService.isMobileMenuOpen()) {
+      // Discard pending inertia without changing the visible position.
+      this.targetScroll = this.currentScroll;
+      this.isPointerDown = false;
+      this.pointerHistory = [];
+      this.touchHistory = [];
+      this.isDragging.set(false);
+      this.isAnimating = false;
+      this.animationFrameId = null;
+      this.lastFrameTime = 0;
+      return;
+    }
     if (!this.lastFrameTime) {
       this.lastFrameTime = time;
     }

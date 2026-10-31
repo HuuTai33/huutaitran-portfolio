@@ -24,6 +24,50 @@ describe('GalleryComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should freeze the background and discard inertia while the mobile menu is open', () => {
+    fixture.destroy();
+    const frames: FrameRequestCallback[] = [];
+    const raf = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
+      frames.push(callback);
+      return frames.length;
+    });
+    try {
+      fixture = TestBed.createComponent(GalleryComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      const column = component.colLeftRef!.nativeElement;
+      frames.shift()!(16);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      frames.shift()!(32);
+      const position = column.style.transform;
+
+      photosService.isMobileMenuOpen.set(true);
+      frames.shift()!(48);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      component.onKeyDown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      const touch = new TouchEvent('touchmove');
+      Object.defineProperty(touch, 'touches', { value: [{ clientY: 200 }] });
+      component.onTouchStart(touch);
+      component.onTouchMove(touch);
+      component.onTouchEnd();
+      component.onPointerDown(new MouseEvent('mousedown', { clientY: 200 }));
+      component.onPointerMove(new MouseEvent('mousemove', { clientY: 100 }));
+      component.onPointerUp();
+      expect(column.style.transform).toBe(position);
+      expect(frames).toHaveLength(0);
+      expect(component.isDragging()).toBe(false);
+
+      photosService.isMobileMenuOpen.set(false);
+      expect(frames).toHaveLength(0);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      frames.shift()!(64);
+      frames.shift()!(80);
+      expect(column.style.transform).not.toBe(position);
+    } finally {
+      raf.mockRestore();
+    }
+  });
+
   it('should open lightbox when clicking on a photo item', () => {
     const photo = photosService.photos()[0];
     const openLightboxSpy = vi.spyOn(photosService, 'openLightbox');

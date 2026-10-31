@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   readonly currentLang = this.languageService.currentLang;
   readonly t = this.languageService.t;
   readonly isScrolled = signal<boolean>(false);
-  readonly isMobileMenuOpen = signal<boolean>(false);
+  readonly isMobileMenuOpen = this.photosService.isMobileMenuOpen;
   readonly currentUrl = signal<string>(this.router.url);
 
   private boundScrollListener?: () => void;
@@ -78,6 +78,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.closeMobileMenu();
     if (this.isBrowser) {
       if (this.boundScrollListener) {
         window.removeEventListener('scroll', this.boundScrollListener);

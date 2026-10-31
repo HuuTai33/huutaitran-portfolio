@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WebDevelopmentComponent, WebProject } from './web-development.component';
 import { LanguageService } from '../../services/language.service';
+import { PhotosService } from '../../services/photos.service';
 
 describe('WebDevelopmentComponent', () => {
   let component: WebDevelopmentComponent;
@@ -21,6 +22,60 @@ describe('WebDevelopmentComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it.each(['mobile menu', 'About'])('should freeze the background and discard inertia while %s is open', overlay => {
+    fixture.destroy();
+    const frames: FrameRequestCallback[] = [];
+    const raf = vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
+      frames.push(callback);
+      return frames.length;
+    });
+    try {
+      fixture = TestBed.createComponent(WebDevelopmentComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      const photosService = TestBed.inject(PhotosService);
+      const track = component.trackRef!.nativeElement;
+      frames.shift()!(16);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      frames.shift()!(32);
+      const position = track.style.transform;
+
+      if (overlay === 'About') {
+        photosService.openAbout();
+      } else {
+        photosService.isMobileMenuOpen.set(true);
+      }
+      frames.shift()!(48);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      component.onKeyDown(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      const touch = new TouchEvent('touchmove');
+      Object.defineProperty(touch, 'touches', { value: [{ clientX: 200 }] });
+      component.onTouchStart(touch);
+      component.onTouchMove(touch);
+      component.onTouchEnd();
+      component.onPointerDown(new MouseEvent('mousedown', { clientX: 200 }));
+      component.onPointerMove(new MouseEvent('mousemove', { clientX: 100 }));
+      component.onPointerUp();
+      expect(track.style.transform).toBe(position);
+      expect(frames).toHaveLength(0);
+      expect(component.isDragging()).toBe(false);
+
+      if (overlay === 'About') {
+        photosService.closeAbout();
+      } else {
+        photosService.isMobileMenuOpen.set(false);
+      }
+      expect(frames).toHaveLength(0);
+      window.dispatchEvent(new WheelEvent('wheel', { deltaY: 100 }));
+      frames.shift()!(64);
+      expect(track.style.transform).not.toBe(position);
+    } finally {
+      TestBed.inject(PhotosService).closeAbout();
+      TestBed.inject(PhotosService).isMobileMenuOpen.set(false);
+      raf.mockRestore();
+    }
   });
 
   it('should render loader component', () => {

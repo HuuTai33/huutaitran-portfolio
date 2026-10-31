@@ -87,6 +87,7 @@ describe('NavbarComponent', () => {
     fixture.detectChanges();
 
     expect(component.isMobileMenuOpen()).toBe(true);
+    expect(photosService.isMobileMenuOpen()).toBe(true);
 
     const el = fixture.nativeElement as HTMLElement;
     const header = el.querySelector('header');
@@ -105,6 +106,7 @@ describe('NavbarComponent', () => {
     component.closeMobileMenu();
     fixture.detectChanges();
     expect(component.isMobileMenuOpen()).toBe(false);
+    expect(photosService.isMobileMenuOpen()).toBe(false);
     expect(header?.classList.contains('menu-open')).toBe(false);
     expect(document.body.style.overflow).toBe('');
   });

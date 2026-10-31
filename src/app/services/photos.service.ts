@@ -26,6 +26,7 @@ export class PhotosService {
   readonly activePhotoIndex = signal<number>(-1);
   readonly isLightboxOpen = signal<boolean>(false);
   readonly isAboutOpen = signal<boolean>(false);
+  readonly isMobileMenuOpen = signal<boolean>(false);
 
   readonly activePhoto = computed<string | null>(() => {
     const index = this.activePhotoIndex();
@@ -56,7 +57,7 @@ export class PhotosService {
     this.isLightboxOpen.set(false);
     this.activePhotoIndex.set(-1);
     if (typeof document !== 'undefined') {
-      if (!this.isAboutOpen()) {
+      if (!this.isAboutOpen() && !this.isMobileMenuOpen()) {
         document.body.style.overflow = '';
         document.body.style.touchAction = '';
       }
@@ -74,7 +75,7 @@ export class PhotosService {
   closeAbout() {
     this.isAboutOpen.set(false);
     if (typeof document !== 'undefined') {
-      if (!this.isLightboxOpen()) {
+      if (!this.isLightboxOpen() && !this.isMobileMenuOpen()) {
         document.body.style.overflow = '';
         document.body.style.touchAction = '';
       }

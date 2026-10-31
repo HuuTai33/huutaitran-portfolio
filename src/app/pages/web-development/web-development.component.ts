@@ -9,11 +9,13 @@ import {
   OnDestroy,
   PLATFORM_ID,
   ViewChild,
+  computed,
   inject,
   signal
 } from '@angular/core';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { LanguageService } from '../../services/language.service';
+import { PhotosService } from '../../services/photos.service';
 
 export interface WebProject {
   title: string;
@@ -31,6 +33,10 @@ export interface WebProject {
 })
 export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   private readonly zone = inject(NgZone);
+  private readonly photosService = inject(PhotosService);
+  private readonly isScrollLocked = computed(() =>
+    this.photosService.isMobileMenuOpen() || this.photosService.isAboutOpen()
+  );
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   readonly languageService = inject(LanguageService);
@@ -113,6 +119,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent) {
+    if (this.isScrollLocked()) return;
     if (!this.isBrowser || this.projects().length <= 1) return;
 
     if (
@@ -142,6 +149,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
 
   // Pointer / Drag support
   onPointerDown(e: MouseEvent) {
+    if (this.isScrollLocked()) return;
     if (this.projects().length <= 1 || e.button !== 0) return;
     this.isPointerDown = true;
     this.pointerStartX = e.clientX;
@@ -150,6 +158,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   }
 
   onPointerMove(e: MouseEvent) {
+    if (this.isScrollLocked()) return;
     if (!this.isPointerDown || this.projects().length <= 1) return;
     if (!this.isDragging() && Math.abs(e.clientX - this.pointerStartX) > 6) {
       this.isDragging.set(true);
@@ -163,6 +172,11 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   }
 
   onPointerUp() {
+    if (this.isScrollLocked()) {
+      this.isPointerDown = false;
+      this.isDragging.set(false);
+      return;
+    }
     if (this.isPointerDown) {
       this.isPointerDown = false;
       if (this.isDragging()) {
@@ -173,6 +187,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
 
   // Touch Support
   onTouchStart(e: TouchEvent) {
+    if (this.isScrollLocked()) return;
     if (this.projects().length <= 1 || e.touches.length === 0) return;
     this.touchStartX = e.touches[0].clientX;
     this.touchLastX = this.touchStartX;
@@ -182,6 +197,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   }
 
   onTouchMove(e: TouchEvent) {
+    if (this.isScrollLocked()) return;
     if (this.projects().length <= 1 || e.touches.length === 0) return;
     const currentX = e.touches[0].clientX;
     const currentTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
@@ -203,6 +219,11 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   }
 
   onTouchEnd() {
+    if (this.isScrollLocked()) {
+      this.touchVelocity = 0;
+      this.isDragging.set(false);
+      return;
+    }
     if (this.isDragging()) {
       if (Math.abs(this.touchVelocity) > 1.5) {
         const momentum = Math.max(-350, Math.min(350, this.touchVelocity * 10));
@@ -244,6 +265,7 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
 
     this.zone.runOutsideAngular(() => {
       this.boundWheelListener = (e: WheelEvent) => {
+        if (this.isScrollLocked()) return;
         // Intercept wheel on page to scroll horizontally
         e.preventDefault();
         const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -285,6 +307,16 @@ export class WebDevelopmentComponent implements AfterViewInit, OnDestroy {
   }
 
   private readonly animationLoop = () => {
+    if (this.isScrollLocked()) {
+      // Discard pending inertia without changing the visible position.
+      this.targetScroll = this.currentScroll;
+      this.isPointerDown = false;
+      this.touchVelocity = 0;
+      this.isDragging.set(false);
+      this.isAnimating = false;
+      this.animationFrameId = null;
+      return;
+    }
     const diff = this.targetScroll - this.currentScroll;
     if (Math.abs(diff) > 0.05) {
       this.currentScroll += diff * 0.085;
